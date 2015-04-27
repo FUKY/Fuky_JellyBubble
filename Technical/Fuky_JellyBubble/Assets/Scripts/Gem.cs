@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using UnityEngine.UI;
+using System.Collections.Generic;
 
 public class Gem : MonoBehaviour {
 
@@ -21,6 +22,7 @@ public class Gem : MonoBehaviour {
     private bool activateChangeDacBiet;
 
     private GameObject a;
+    List<GameObject> b = new List<GameObject>();
     public Gem()
     {
         this.column = 0;
@@ -30,6 +32,8 @@ public class Gem : MonoBehaviour {
 
     void Start()
     {
+        activaChangeSprite = false;
+        activateChangeDacBiet = false;
         spriteStart = gameObject.GetComponent<Image>().sprite;
     }
 
@@ -65,20 +69,31 @@ public class Gem : MonoBehaviour {
         }
         activaChangeSprite = false;
     }
+
     public void ChangSpriteDacBiet(GameObject obj)
     {
+        activateChangeDacBiet = true;
         a = obj;
+        
         if (cucDacBiet == false)
         {
             gameObject.tag = obj.tag;
-            gameObject.GetComponent<Image>().sprite = obj.GetComponent<Gem>().spriteStart;            
+            gameObject.GetComponent<Image>().sprite = obj.GetComponent<Gem>().spriteStart;
+            if (activaChangeSprite == false)
+                gameObject.GetComponent<Gem>().spriteChange = obj.GetComponent<Gem>().spriteChange;
+
         }
-        activateChangeDacBiet = true;
+        
     }
     public void ResetSpriteDacBiet(GameObject obj)
     {
         gameObject.tag = obj.tag;
         gameObject.GetComponent<Image>().sprite = spriteStart;
         activateChangeDacBiet = false;
+    }
+    public void ResetActive()
+    {
+        activateChangeDacBiet = false;
+        activaChangeSprite = false;
     }
 }
