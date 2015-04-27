@@ -51,10 +51,6 @@ public class GameController : MonoBehaviour, IBeginDragHandler, IEndDragHandler,
 	// Update is called once per frame
 	void Update () {
         DestroyButtonMouse();
-        for (int i = 0; i < ListDelete.Count; i++)
-        {
-            //ChangeSprite(ListDelete[i]);
-        }
 	}
     void FixedUpdate()
     {
@@ -201,7 +197,7 @@ public class GameController : MonoBehaviour, IBeginDragHandler, IEndDragHandler,
     int TimViTriY(GameObject vitrClick)
     {
         int posY;
-        posY = (int)(vitrClick.transform.position.y / 0.75 + y + 1);
+        posY = (int)(vitrClick.transform.position.y / 0.75 + y + 1.2f);
         return posY;
     }
     public void OnBeginDrag(PointerEventData eventData)
@@ -216,17 +212,25 @@ public class GameController : MonoBehaviour, IBeginDragHandler, IEndDragHandler,
         }
         else
         {
+            
             if (ListDelete.Count == 0)
             {
                 ListDelete.Add(rayHit.collider.gameObject);
                 listMouse.Add(rayHit.collider.gameObject);
+                ListDelete[ListDelete.Count -1].GetComponent<Gem>().ChangSprite();
             }
         }
 
     }
     public void OnEndDrag(PointerEventData eventData)
     {
+        if (ListDelete.Count == 1)
+        {
+            if (ListDelete[0] != null)
+                ListDelete[0].GetComponent<Gem>().ResetSprite();
+        }
         Xoa();
+        
         activeTimeHelp = true;
         activeInstanDacBiet2 = true;
     }
@@ -256,9 +260,11 @@ public class GameController : MonoBehaviour, IBeginDragHandler, IEndDragHandler,
             }
             if (!ListDelete.Contains(rayHit.collider.gameObject) && ListDelete.Count >= 1)//kiem tra xem doi tuong chon da co trong ListDelete chua
             {
+                
                 InstantiateConect(rayHit.collider.gameObject, ListDelete[ListDelete.Count - 1]);//xuat ket noi ra man hinh
                 ListDelete.Add(rayHit.collider.gameObject);
-
+                ListDelete[ListDelete.Count - 1].GetComponent<Gem>().ChangSprite();
+                
                 if (ListDelete.Count == 5)
                 {
                     activeInstanDacBiet1 = true;
@@ -267,31 +273,32 @@ public class GameController : MonoBehaviour, IBeginDragHandler, IEndDragHandler,
                 {
                     CucDacBiet(TimViTriX(rayHit.collider.gameObject), TimViTriY(rayHit.collider.gameObject));
                 }
+
                 
             }
             if (ListDelete.Count >= 2)
             {
-                if (rayHit.collider.gameObject == ListDelete[ListDelete.Count - 2] /*&& listConect.Count >= 1*/)//neu nguoi choi quay lai cuc phia trc co
+                if (rayHit.collider.gameObject == ListDelete[ListDelete.Count - 2] && listConect.Count >= 1)//neu nguoi choi quay lai cuc phia trc co
                 {
-
-                    ListDelete.RemoveAt(ListDelete.Count - 1);
+                    ListDelete[ListDelete.Count - 1].GetComponent<Gem>().ResetSprite();
+                    ListDelete.RemoveAt(ListDelete.Count - 1);                    
                     Destroy(listConect[listConect.Count - 1]);
                     listConect.RemoveAt(listConect.Count - 1);
-                    GameObject a = new GameObject();
-                    for (int i = 0; i < listMouse.Count; i++)
+                }
+            }
+
+            for (int i = 0; i < listMouse.Count; i++)
+            {
+                if (listMouse[i].GetComponent<Gem>().cucDacBiet == true)
+                {
+                    GameObject a = listMouse[i];
+                    if (!ListDelete.Contains(listMouse[i]))
                     {
-                        if (listMouse[i].GetComponent<Gem>().cucDacBiet == true)
-                        {
-                            a = listMouse[i];
-                        }
-                    }
-                    if (!ListDelete.Contains(a))
-                    {
-                        ResetCucDacBiet(TimViTriX(a), TimViTriY(a));
-                        listMouse.RemoveAt(listMouse.Count - 1);
+                        ResetCucDacBiet(TimViTriX(listMouse[i]), TimViTriY(listMouse[i]));
                     }
                 }
             }
+                
             
         }
     }
@@ -451,11 +458,9 @@ public class GameController : MonoBehaviour, IBeginDragHandler, IEndDragHandler,
         {
             for (int n = j - 1; n <= j + 1; n++)
             {
-                if (m >= 0 && n >= 0)
+                if (m >= 0 && n >= 0 && m<=7 && n<=8)
                 {
-                    arrGem[m][n].tag = listGem[arrGem[m][n].GetComponent<Gem>().inDex].tag;
-                    arrGem[m][n].GetComponent<Image>().sprite = listGem[arrGem[m][n].GetComponent<Gem>().inDex].GetComponent<Image>().sprite;
-
+                    arrGem[m][n].GetComponent<Gem>().ResetSpriteDacBiet(listGem[arrGem[m][n].GetComponent<Gem>().inDex]);
                 }
             }
         }
@@ -467,13 +472,10 @@ public class GameController : MonoBehaviour, IBeginDragHandler, IEndDragHandler,
         {
             for (int n = j - 1; n <= j + 1; n++)
             {
-                if (m >= 0 && n >= 0 && arrGem[m][n] != arrGem[i][j])
+                if (m >= 0 && n >= 0 && m<=7 && n<=8 && arrGem[m][n] != arrGem[i][j])
                 {
-                    if (arrGem[m][n].GetComponent<Gem>().cucDacBiet == false)
-                    {
-                        arrGem[m][n].tag = arrGem[i][j].tag;
-                        arrGem[m][n].GetComponent<Image>().sprite = arrGem[i][j].GetComponent<Image>().sprite;
-                    }
+                    if (!ListDelete.Contains(arrGem[m][n]))
+                        arrGem[m][n].GetComponent<Gem>().ChangSpriteDacBiet(arrGem[i][j]);
                 }
             }
         }
@@ -531,8 +533,5 @@ public class GameController : MonoBehaviour, IBeginDragHandler, IEndDragHandler,
 
         }
     }
-    void ChangeSprite(GameObject a)
-    {
-        a.GetComponent<Image>().sprite = image[a.GetComponent<Gem>().inDex];
-    }
+
 }
