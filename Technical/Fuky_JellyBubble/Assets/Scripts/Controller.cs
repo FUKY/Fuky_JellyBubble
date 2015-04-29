@@ -64,4 +64,8 @@ public class Controller : MonoBehaviour
         gameCore.active = true;
         Application.LoadLevel(Application.loadedLevel);
     }
+    public void AddTime()
+    {
+        timeGame += 10;
+    }
 }
