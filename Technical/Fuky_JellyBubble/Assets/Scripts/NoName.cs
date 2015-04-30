@@ -24,28 +24,32 @@ public class NoName : MonoBehaviour {
     void ChangleFillAmount()
     {
         countDelete = gameController.ListDelete.Count;
-        if (gameObject.tag == "Time")
+        gameObject.GetComponent<Image>().fillAmount = (1 - countDelete * 0.1f);
+        if (gameObject.GetComponent<Image>().fillAmount <= 0)
         {
-            gameObject.GetComponent<Image>().fillAmount = (1 - countDelete * 0.1f);
-            if (gameObject.GetComponent<Image>().fillAmount <= 0)
-            {
-                gameController.activeAddtime = true;
-            }
+            gameController.activeAddtime = true;
         }
+        
     }
     public void Test(int count, int i)
     {
-        if (list[i].GetComponent<Image>() == null)
+        if (totalDelete[i] > 15)
         {
-            return;
-        }
-        list[i].GetComponent<Image>().fillAmount = (1 - count * 0.05f);
-        if (list[i].GetComponent<Image>().fillAmount <= 0)
-        {
-            gameController.indexRandom = i;
+            int rand = Random.Range(0, 100);
+            if (rand < 20)
+            {
+                gameController.indexRandom = 2;
+            }
+            if (rand > 20 && rand < 60)
+            {
+                gameController.indexRandom = 0;
+            }
+            if (rand > 60)
+            {
+                gameController.indexRandom = 1;
+            }
             gameController.activeInstanDacBiet1 = true;
-            list[i].GetComponent<Image>().fillAmount = 1;             
             totalDelete[i] = 0;
-        } 
+        }
     }
 }

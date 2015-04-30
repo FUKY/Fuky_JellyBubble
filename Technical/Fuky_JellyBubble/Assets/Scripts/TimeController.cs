@@ -5,6 +5,7 @@ public class TimeController : MonoBehaviour {
 
     private Controller controllGUI;
     private GameController gameController;
+    
 	// Use this for initialization
     
 	void Start () {
@@ -19,11 +20,10 @@ public class TimeController : MonoBehaviour {
     
     void UpdatePositionItween()
     {
-
         iTween.MoveTo(gameObject, iTween.Hash(
-            iT.MoveTo.position, gameController.tranfs.position,//toi vi tri cuoi
+            iT.MoveTo.position, gameController.tranfsOut.position,//toi vi tri cuoi
             iT.MoveTo.time, 1.0f,//thoi gian
-            iT.MoveTo.easetype, iTween.EaseType.easeOutBack,//hieu ung di chuyen
+            //iT.MoveTo.easetype, iTween.EaseType.easeOutBack,//hieu ung di chuyen
             iT.MoveTo.oncomplete, "AddTime",
             iT.MoveTo.oncompletetarget, gameObject));
 
@@ -38,6 +38,6 @@ public class TimeController : MonoBehaviour {
     void AddTime()
     {
         controllGUI.AddTime();
-        //Destroy(gameObject);
+        Destroy(gameObject);
     }
 }
