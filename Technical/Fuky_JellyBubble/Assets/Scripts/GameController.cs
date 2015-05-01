@@ -83,7 +83,7 @@ public class GameController : MonoBehaviour, IBeginDragHandler, IEndDragHandler,
             if (activeAddtime == true)
             {
                 InstantiateTimeStar();
-                activeAddtime = false;
+                
             }
         }
         
@@ -152,7 +152,9 @@ public class GameController : MonoBehaviour, IBeginDragHandler, IEndDragHandler,
 
         gemObj.GetComponent<Gem>().spriteStart = gemImageStart[index];
         gemObj.GetComponent<Gem>().spriteChange = gemImageChange[index];
-        gemObj.GetComponent<Gem>().ResetSprite();
+
+        
+
         Vector3 pos = new Vector3((row - 3.0f) * 80, (collumn - 3.5f) * 72 + ItPos, 1);
         gemObj.transform.SetParent(gemContainer);
         gemObj.transform.localScale = Vector3.one;
@@ -161,9 +163,14 @@ public class GameController : MonoBehaviour, IBeginDragHandler, IEndDragHandler,
 
         Gem gem = gemObj.GetComponent<Gem>();
         gem.SetProfile(collumn, row, index);
+
+        gemObj.GetComponent<Gem>().ResetSprite();
+        gemObj.GetComponent<Gem>().ResetSpriteStart();
+        gemObj.GetComponent<Gem>().ResetActive();
         Vector3 posIT = new Vector3((row - 3.0f) * 80, (collumn - 3.5f)* 72, 1);
 
         arrGem[row][collumn].GetComponent<Gem>().MovePosition(posIT, 0.5f);
+        arrGem[row][collumn].GetComponent<Gem>().timeAdd = false;
  
     }
 
@@ -178,40 +185,32 @@ public class GameController : MonoBehaviour, IBeginDragHandler, IEndDragHandler,
     public void DespawnGem(Transform gemTrans) 
     {
         SpawnPool gemPool = PoolManager.Pools["gem1"];
-        //gemTrans.gameObject.GetComponent<Gem>().ResetSprite();
         gemPool.Despawn(gemTrans);
+
     }
 
 
     void InstantiateTimeStar()
     {
-        int row;
-        int collumn;
+        int row = Random.Range(0, 7);
+        int collumn = Random.Range(0, 8);
         do
         {
-            row = Random.Range(0, 7);
-            collumn = Random.Range(0, 8);
-            if (arrGem[row][collumn] == null )
+            if (arrGem[row][collumn] == null)
             {
                 row = Random.Range(0, 7);
                 collumn = Random.Range(0, 8);
             }
-            else
-                if (arrGem[row][collumn].GetComponent<Gem>().timeAdd == true)
-                {
-                    row = Random.Range(0, 7);
-                    collumn = Random.Range(0, 8);
-                }
-
-        } while (arrGem[row][collumn] == null || arrGem[row][collumn].GetComponent<Gem>().timeAdd == true);
-
-            GameObject a = Instantiate(timeStar, tranfsIn.position, Quaternion.identity) as GameObject;
-            a.GetComponent<Gem>().MovePositionStar(arrGem[row][collumn].transform.position, 1.0f);
-
-            a.transform.parent = arrGem[row][collumn].transform;
-            //a.transform.parent = gemContainer;
-            a.transform.localScale = Vector3.one;
-            arrGem[row][collumn].GetComponent<Gem>().timeAdd = true;
+        }while(arrGem[row][collumn] == null);
+        GameObject a = Instantiate(timeStar, tranfsIn.position, Quaternion.identity) as GameObject;
+        a.GetComponent<Gem>().MovePositionStar(arrGem[row][collumn].transform.position, 1.0f);
+        a.transform.parent = arrGem[row][collumn].transform;
+        //a.transform.parent = gemContainer;
+        a.transform.localScale = Vector3.one;
+        arrGem[row][collumn].GetComponent<Gem>().timeAdd = true;
+        activeAddtime = false;
+        
+        
         
     }
     void InstantiateConect(GameObject gameObj1, GameObject gameObj2)
@@ -233,6 +232,26 @@ public class GameController : MonoBehaviour, IBeginDragHandler, IEndDragHandler,
         //xoa cac cuc        
         if (ListDelete.Count >= 3)
         {
+            for (int i = 0; i < 5; i++)
+            {
+                if (ListDelete[0].GetComponent<Gem>().inDex == i)
+                {
+                    noname.totalDelete[i] += ListDelete.Count;
+
+                    if (ListDelete.Count >= 5 && ListDelete.Count < 10)
+                    {
+                        float total = noname.totalDelete[i] * 1.3f;
+                        noname.totalDelete[i] = (int)total;
+                    }
+                    if (ListDelete.Count >= 10)
+                    {
+                        float total = noname.totalDelete[i] * 1.5f;
+                        noname.totalDelete[i] = (int)total;
+                    }
+
+                    noname.Test(noname.totalDelete[i], i);
+                }
+            }
             //kiem tra xem cac cuc dac biet co o trong listDelete khong
             for (int i = 0; i < countCollumn; i++)
             {
@@ -248,25 +267,7 @@ public class GameController : MonoBehaviour, IBeginDragHandler, IEndDragHandler,
                     }
                 }
             }
-            for (int i = 0; i < 5; i++)
-            {
-                if (ListDelete[0].GetComponent<Gem>().inDex == i)
-                {
-                    noname.totalDelete[i] += ListDelete.Count;
-                    if (ListDelete.Count >= 5 && ListDelete.Count < 10)
-                    {
-                        float total = noname.totalDelete[i] * 1.3f;
-                        noname.totalDelete[i] = (int)total;
-                    }
-                    if (ListDelete.Count >= 10)
-                    {
-                        float total = noname.totalDelete[i] * 1.5f;
-                        noname.totalDelete[i] = (int)total;
-                    }
-                    Debug.Log(noname.totalDelete[i]);
-                    noname.Test(noname.totalDelete[i], i);
-                }
-            }
+           
             //xoa cac Gem trong listDelete
             for (int i = 0; i < ListDelete.Count; i++)
             {                
@@ -472,6 +473,7 @@ public class GameController : MonoBehaviour, IBeginDragHandler, IEndDragHandler,
             }
         }
         CheckListInvalid();
+        
     }
     //kiem tra xem con duong de an khong
     List<GameObject> LoangDau(List<GameObject> list, int i, int j)
@@ -609,10 +611,11 @@ public class GameController : MonoBehaviour, IBeginDragHandler, IEndDragHandler,
             {
                 if (m >= 0 && n >= 0 && m<7 && n<8)
                 {
-                    if (!ListDelete.Contains(arrGem[m][n]))
-                    {
-                        arrGem[m][n].GetComponent<Gem>().ResetSpriteDacBiet(arrGem[m][n]);
-                    }
+                    arrGem[m][n].GetComponent<Gem>().ResetSpriteDacBiet(arrGem[m][n]);
+                    //if (!ListDelete.Contains(arrGem[m][n]))
+                    //{
+                    //    arrGem[m][n].GetComponent<Gem>().ResetSpriteDacBiet(arrGem[m][n]);
+                    //}
                     
                 }
             }

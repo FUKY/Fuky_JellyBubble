@@ -23,26 +23,24 @@ public class Gem : MonoBehaviour {
     public bool cucDacBiet = false;
     public bool timeAdd = false;
 
-    public bool activaChangeSprite = false;
-    public bool activateChangeDacBiet = false;
-
     private GameObject a;
     Sprite start;
+    Sprite changle;
+    int indexStart;
     public Gem()
     {
         this.collumn = 0;
         this.row = 0;
         this.inDex = 0;
     }
-
+    
     void Start()
     {
-        //
-        activaChangeSprite = false;
-        activateChangeDacBiet = false;
-        //spriteStart = gameObject.GetComponent<Image>().sprite;
-        gameObject.GetComponent<Image>().sprite = spriteStart;
         start = gameObject.GetComponent<Image>().sprite;
+        gameObject.GetComponent<Image>().sprite = spriteStart;
+        indexStart = inDex;
+        changle = spriteChange;
+        ResetSprite();
     }
 
     // Update is called once per frame
@@ -63,36 +61,76 @@ public class Gem : MonoBehaviour {
     {
         gameObject.GetComponent<Image>().sprite = spriteChange;
     }
+  
     public void ResetSprite()
     {
-        if (activateChangeDacBiet == false)
-            gameObject.GetComponent<Image>().sprite = spriteStart;
-        else
-        {
-            gameObject.GetComponent<Image>().sprite = spriteStart;
-        }
-        
+        gameObject.GetComponent<Image>().sprite = spriteStart;
+
+    }
+    public void ResetSpriteStart()
+    {
+        start = spriteStart;
+        changle = spriteChange;
+        indexStart = inDex;
     }
     public void ChangSpriteDacBiet(GameObject obj)
     {
-        activateChangeDacBiet = true;
-        a = obj;        
         if (cucDacBiet == false)
         {
+            a = obj;
             inDex = obj.GetComponent<Gem>().inDex;
             gameObject.GetComponent<Image>().sprite = obj.GetComponent<Gem>().spriteStart;
             spriteChange = obj.GetComponent<Gem>().spriteChange;
             spriteStart = obj.GetComponent<Gem>().spriteStart;
+            
         }
         
     }
     public void ResetSpriteDacBiet(GameObject obj)
     {
-        activateChangeDacBiet = false;
-        inDex = obj.GetComponent<Gem>().inDex;
-        gameObject.GetComponent<Image>().sprite = start;
+        if (cucDacBiet == false)
+        {
+            inDex = indexStart;
+            gameObject.GetComponent<Image>().sprite = start;
+            spriteStart = start;
+            spriteChange = changle;
+        }
         
+
+        //ResetSprite();
    }
+
+    public void ResetActive()
+    {
+        destroyCollum = false;
+        destroyRow = false;
+        destroyColRow = false;
+        cucDacBiet = false;
+        timeAdd = false;
+        for (int i = 0; i < gameObject.transform.childCount; i++ )
+        {
+            Transform child = gameObject.transform.GetChild(i);
+            Destroy(child.gameObject);
+        }
+    }
+
+    public void  SetSprite()
+    {
+        if (a == null)
+        {
+            Debug.Log("chua vao");
+            return;
+        }
+
+        else
+        {
+            spriteChange = a.GetComponent<Gem>().spriteChange;
+            spriteStart = a.GetComponent<Gem>().spriteStart;
+            Debug.Log("da vao");
+        }
+        
+        
+    }
     
     public int PosX()
     {

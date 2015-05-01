@@ -33,9 +33,10 @@ public class NoName : MonoBehaviour {
     }
     public void Test(int count, int i)
     {
-        if (totalDelete[i] > 15)
+        if (totalDelete[i] > 5)
         {
-            int rand = Random.Range(0, 100);
+            int rand = Random.Range(0, 20);
+
             if (rand < 20)
             {
                 gameController.indexRandom = 2;
@@ -48,8 +49,9 @@ public class NoName : MonoBehaviour {
             {
                 gameController.indexRandom = 1;
             }
-            gameController.activeInstanDacBiet1 = true;
             totalDelete[i] = 0;
+            gameController.activeInstanDacBiet1 = true;
+            
         }
     }
 }
