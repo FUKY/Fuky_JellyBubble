@@ -34,7 +34,6 @@ public class TimeController : MonoBehaviour {
         gameObject.transform.parent = gameController.gameObject.transform;
         gameObject.transform.localScale = Vector3.one;
         UpdatePositionItween();
-        gameController.activeAddtime = false;
     }
     void AddTime()
     {

@@ -165,7 +165,7 @@ public class GameController : MonoBehaviour, IBeginDragHandler, IEndDragHandler,
         gem.SetProfile(collumn, row, index);
 
         gemObj.GetComponent<Gem>().ResetSprite();
-        gemObj.GetComponent<Gem>().ResetSpriteStart();
+       // gemObj.GetComponent<Gem>().ResetSpriteStart();
         gemObj.GetComponent<Gem>().ResetActive();
         Vector3 posIT = new Vector3((row - 3.0f) * 80, (collumn - 3.5f)* 72, 1);
 
@@ -196,12 +196,12 @@ public class GameController : MonoBehaviour, IBeginDragHandler, IEndDragHandler,
         int collumn = Random.Range(0, 8);
         do
         {
-            if (arrGem[row][collumn] == null)
+            if (arrGem[row][collumn] == null || arrGem[row][collumn].GetComponent<Gem>().timeAdd == true)
             {
                 row = Random.Range(0, 7);
                 collumn = Random.Range(0, 8);
             }
-        }while(arrGem[row][collumn] == null);
+        } while (arrGem[row][collumn] == null || arrGem[row][collumn].GetComponent<Gem>().timeAdd == true);
         GameObject a = Instantiate(timeStar, tranfsIn.position, Quaternion.identity) as GameObject;
         a.GetComponent<Gem>().MovePositionStar(arrGem[row][collumn].transform.position, 1.0f);
         a.transform.parent = arrGem[row][collumn].transform;
@@ -270,11 +270,19 @@ public class GameController : MonoBehaviour, IBeginDragHandler, IEndDragHandler,
            
             //xoa cac Gem trong listDelete
             for (int i = 0; i < ListDelete.Count; i++)
-            {                
+            {
+                if (ListDelete[i].GetComponent<Gem>().cucDacBiet == true)
+                {
+                    for (int m = 0; m < listDacBiet.Count; m++)
+                    {
+                        listDacBiet[m].GetComponent<Gem>().Test(ListDelete[i]);
+                    }
+                }
                 if (ListDelete[i].GetComponent<Gem>().timeAdd == true && ListDelete[i] != null)
                 {
                     if (ListDelete[i].transform.childCount == 1)
                         ListDelete[i].GetComponentInChildren<TimeController>().UpdateParent();
+                    ListDelete[i].GetComponent<Gem>().timeAdd = false;
                     
                 }
                 Vector3 pos = new Vector3(ListDelete[i].transform.localPosition.x, ListDelete[i].transform.localPosition.y, -9000);
@@ -290,17 +298,7 @@ public class GameController : MonoBehaviour, IBeginDragHandler, IEndDragHandler,
                 score += 10;
             }
         }
-        if (ListDelete.Count < 3 && ListDelete.Count >= 0)
-        {
-            for(int i = 0; i < ListDelete.Count; i++)
-            {
-                if (ListDelete[i].GetComponent<Gem>().cucDacBiet == true)
-                {
-                    ResetCucDacBiet(TimViTriX(ListDelete[i]), TimViTriY(ListDelete[i]));
-                }
-            }
-            
-        }
+
         //xoa listConect
         for (int i = 0; i < listConect.Count; i++)
         {
@@ -334,6 +332,7 @@ public class GameController : MonoBehaviour, IBeginDragHandler, IEndDragHandler,
     {
         activeTimeHelp = false;
         activeDestroyGem = false;
+        listDacBiet.Clear();
         rayHit = Physics2D.Raycast(Camera.main.ScreenToWorldPoint(Input.mousePosition), Vector2.zero);
 
         if (rayHit.collider == null)
@@ -354,13 +353,17 @@ public class GameController : MonoBehaviour, IBeginDragHandler, IEndDragHandler,
     }
     public void OnEndDrag(PointerEventData eventData)
     {
-        
+        for (int i = 0; i < ListDelete.Count; i++)
+        {
+            
+        }
         if (ListDelete.Count == 1)
         {
             ListDelete[0].GetComponent<Gem>().ResetSprite();
         }
         if (ListDelete.Count == 2)
         {
+            
             if (ListDelete[1].GetComponent<Gem>().cucDacBiet == true)
             {
                 int a = ListDelete[1].gameObject.GetComponent<Gem>().PosX();
@@ -611,27 +614,35 @@ public class GameController : MonoBehaviour, IBeginDragHandler, IEndDragHandler,
             {
                 if (m >= 0 && n >= 0 && m<7 && n<8)
                 {
-                    arrGem[m][n].GetComponent<Gem>().ResetSpriteDacBiet(arrGem[m][n]);
-                    //if (!ListDelete.Contains(arrGem[m][n]))
-                    //{
-                    //    arrGem[m][n].GetComponent<Gem>().ResetSpriteDacBiet(arrGem[m][n]);
-                    //}
+                    //arrGem[m][n].GetComponent<Gem>().ResetSpriteDacBiet(arrGem[m][n]);
+                    if (!ListDelete.Contains(arrGem[m][n]))
+                    {
+                        arrGem[m][n].GetComponent<Gem>().ResetSpriteDacBiet(arrGem[m][n]);
+                    }
                     
                 }
             }
         }
     }
-    //cuc dac biet thu nhat lam cac cuc xung quanh giong nhu no    
+    //cuc dac biet thu nhat lam cac cuc xung quanh giong nhu no  
+    List<GameObject> listDacBiet = new List<GameObject>();
     void CucDacBiet(int i, int j)
     {
+        listDacBiet.Clear();
         for (int m = i - 1; m <= i + 1; m++)
         {
             for (int n = j - 1; n <= j + 1; n++ )
             {
                 if (m >= 0 && n >= 0 && m<7 && n<8 && arrGem[m][n] != arrGem[i][j])
                 {
+                    //arrGem[m][n].GetComponent<Gem>().ChangSpriteDacBiet(arrGem[i][j]);  
                     if (!ListDelete.Contains(arrGem[m][n]))
+                    {
                         arrGem[m][n].GetComponent<Gem>().ChangSpriteDacBiet(arrGem[i][j]);
+                        if (arrGem[m][n].GetComponent<Gem>().cucDacBiet == false)
+                            listDacBiet.Add(arrGem[m][n]);
+                    }
+                    
                 }
             }
         }

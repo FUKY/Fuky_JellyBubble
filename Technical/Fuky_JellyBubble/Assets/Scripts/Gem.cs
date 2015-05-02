@@ -73,6 +73,16 @@ public class Gem : MonoBehaviour {
         changle = spriteChange;
         indexStart = inDex;
     }
+    public void Test(GameObject obj)
+    {        
+        spriteStart = obj.GetComponent<Gem>().spriteStart;
+        spriteChange = obj.GetComponent<Gem>().spriteChange;
+        inDex = obj.GetComponent<Gem>().inDex;
+        start = spriteStart;
+        changle = spriteChange;
+        indexStart = inDex;
+        
+    }
     public void ChangSpriteDacBiet(GameObject obj)
     {
         if (cucDacBiet == false)

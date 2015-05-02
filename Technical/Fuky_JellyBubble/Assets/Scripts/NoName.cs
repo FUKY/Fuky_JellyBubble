@@ -33,9 +33,9 @@ public class NoName : MonoBehaviour {
     }
     public void Test(int count, int i)
     {
-        if (totalDelete[i] > 5)
+        if (totalDelete[i] > 15)
         {
-            int rand = Random.Range(0, 20);
+            int rand = Random.Range(0, 100);
 
             if (rand < 20)
             {

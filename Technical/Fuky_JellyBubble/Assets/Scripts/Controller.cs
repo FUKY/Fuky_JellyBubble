@@ -5,14 +5,15 @@ using UnityEngine.UI;
 public class Controller : MonoBehaviour
 {
     public GameObject gameOver;
-    public GameObject uI;
     public GameObject gameCore;
-     public GameObject timeImgage;
+    public GameObject timeImgage;
+    public GameObject gameStart;
 
     public float timeGame = 60;
     public Text textTimeSecond;
     public Text textScore;
     public Text textScore2;
+    public Text hightScore;
    
 
     private float timeDelay = 0;
@@ -23,22 +24,22 @@ public class Controller : MonoBehaviour
     {
         gameControl = gameObject.GetComponentInChildren<GameController>();
         timeDelay = 0;
-        timeGame = 60;
+        timeGame = 60;        
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (gameOver.active == false && uI.active == true && gameCore.active == true)
+        if (gameOver.active == false && gameCore.active == true)
         {
             if (timeDelay > 1)
             {
                 timeGame -= 1;
                 if (timeGame <= 0)
                 {
+                    SaveScore();
                     textScore2.text = System.String.Format("Score : {0}", gameControl.score);
                     gameOver.active = true;
-                    uI.active = false;
                     gameCore.active = false;
 
                 }
@@ -46,10 +47,12 @@ public class Controller : MonoBehaviour
             }
             timeDelay += Time.deltaTime;
             textTimeSecond.text = timeGame.ToString();
-            textScore.text = System.String.Format("Score : {0}", gameControl.score);
+            if (gameControl != null)
+                textScore.text = System.String.Format("Score : {0}", gameControl.score);
              
             UpdateTime();
         }
+        
     }
     void UpdateTime()
     {
@@ -59,13 +62,27 @@ public class Controller : MonoBehaviour
     }
     public void ReLayGame()
     {
+
         gameOver.active = false;
-        uI.active = true;
         gameCore.active = true;
         Application.LoadLevel(Application.loadedLevel);
     }
     public void AddTime()
     {
         timeGame += 10;
+    }
+    public void SaveScore()
+    {
+        if(gameControl.score> PlayerPrefs.GetInt("Score"))
+        {
+            PlayerPrefs.SetInt("Score", gameControl.score);
+            PlayerPrefs.Save();
+        }
+        hightScore.text = "Hight Score: " + PlayerPrefs.GetInt("Score");
+    }
+    public void GameStart()
+    {
+        gameStart.active = false;
+        gameCore.active = true;
     }
 }
