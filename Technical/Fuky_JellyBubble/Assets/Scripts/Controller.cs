@@ -18,13 +18,17 @@ public class Controller : MonoBehaviour
 
     private float timeDelay = 0;
     private GameController gameControl;
+    void ReStart()
+    {
+        timeGame = 60;
+        timeDelay = 0;
+    }
 
     // Use this for initialization
     void Start()
     {
-        gameControl = gameObject.GetComponentInChildren<GameController>();
         timeDelay = 0;
-        timeGame = 60;        
+        timeGame = 60;
     }
 
     // Update is called once per frame
@@ -37,11 +41,15 @@ public class Controller : MonoBehaviour
                 timeGame -= 1;
                 if (timeGame <= 0)
                 {
-                    SaveScore();
                     textScore2.text = System.String.Format("Score : {0}", gameControl.score);
-                    gameOver.active = true;
-                    gameCore.active = false;
-
+                    
+                    if (gameControl.activeDestroyGem == true)
+                    {
+                        gameCore.active = false;
+                        gameOver.active = true;
+                    }
+                    
+                    SaveScore();
                 }
                 timeDelay = 0;
             }
@@ -62,10 +70,12 @@ public class Controller : MonoBehaviour
     }
     public void ReLayGame()
     {
-
+        gameStart.active = false;
         gameOver.active = false;
         gameCore.active = true;
-        Application.LoadLevel(Application.loadedLevel);
+        ReStart();
+        gameControl.RandomMap();
+
     }
     public void AddTime()
     {
@@ -73,7 +83,7 @@ public class Controller : MonoBehaviour
     }
     public void SaveScore()
     {
-        if(gameControl.score> PlayerPrefs.GetInt("Score"))
+        if(gameControl.score > PlayerPrefs.GetInt("Score"))
         {
             PlayerPrefs.SetInt("Score", gameControl.score);
             PlayerPrefs.Save();
@@ -84,5 +94,10 @@ public class Controller : MonoBehaviour
     {
         gameStart.active = false;
         gameCore.active = true;
+        gameControl = gameObject.GetComponentInChildren<GameController>();
+    }
+    public void QuitGame()
+    {
+        Application.Quit();
     }
 }

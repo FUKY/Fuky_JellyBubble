@@ -31,6 +31,10 @@ public class NoName : MonoBehaviour {
         }
         
     }
+    public void ResetGame()
+    {
+        totalDelete = new int[6];
+    }
     public void Test(int count, int i)
     {
         if (totalDelete[i] > 15)

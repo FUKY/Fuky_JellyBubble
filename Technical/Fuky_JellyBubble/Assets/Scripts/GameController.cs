@@ -29,6 +29,7 @@ public class GameController : MonoBehaviour, IBeginDragHandler, IEndDragHandler,
     public Transform tranfsOut;
     public GameObject timeStar;
     public Transform gemContainer;
+    public Transform conectContainer;
 
 
     private GameObject[][] arrGem;//list Game Object hien ra man hinh
@@ -51,6 +52,7 @@ public class GameController : MonoBehaviour, IBeginDragHandler, IEndDragHandler,
     public bool activeAddtime;
 
     private NoName noname;
+    
 	// Use this for initialization
 	void Start () {
         noname = GameObject.Find("Canvas").GetComponentInChildren<NoName>();
@@ -85,6 +87,10 @@ public class GameController : MonoBehaviour, IBeginDragHandler, IEndDragHandler,
                 InstantiateTimeStar();
                 
             }
+            if (listLoangDau.Count == 0)//neu k con duong nao de an Ramdom lai map
+            {
+                RandomMap();
+            }
         }
         
         if (activeTimeHelp == true)
@@ -118,10 +124,7 @@ public class GameController : MonoBehaviour, IBeginDragHandler, IEndDragHandler,
         {
             ResetScaleGem();
         }
-        if (listLoangDau.Count == 0)//neu k con duong nao de an Ramdom lai map
-        {
-            RandomMap();
-        }        
+                
     }
 
     void RandomGem()
@@ -148,7 +151,7 @@ public class GameController : MonoBehaviour, IBeginDragHandler, IEndDragHandler,
         
         //GameObject a = Instantiate(listGem[index], Vector3.zero, Quaternion.identity) as GameObject; //new Vector3(row * 0.75f - x, collumn * 0.75f - y + posItween, 0)
         //add vao Canvas
-        GameObject gemObj = SpawnGem();
+        GameObject gemObj = SpawnGem(gemPrefabs, "gem");
 
         gemObj.GetComponent<Gem>().spriteStart = gemImageStart[index];
         gemObj.GetComponent<Gem>().spriteChange = gemImageChange[index];
@@ -174,19 +177,18 @@ public class GameController : MonoBehaviour, IBeginDragHandler, IEndDragHandler,
  
     }
 
-    public GameObject SpawnGem() 
+    public GameObject SpawnGem( GameObject obj, string nameSpawnPool) 
     {
-        SpawnPool gemPool = PoolManager.Pools["gem1"];
+        SpawnPool gemPool = PoolManager.Pools[nameSpawnPool];
         //Transform gemObj = gemPool.Spawn(listGem[index]);
-        Transform gemObj = gemPool.Spawn(gemPrefabs);
+        Transform gemObj = gemPool.Spawn(obj);
         return gemObj.gameObject;
     }
 
-    public void DespawnGem(Transform gemTrans) 
+    public void DespawnGem(Transform gemTrans, string nameSpawnPool) 
     {
-        SpawnPool gemPool = PoolManager.Pools["gem1"];
+        SpawnPool gemPool = PoolManager.Pools[nameSpawnPool];
         gemPool.Despawn(gemTrans);
-
     }
 
 
@@ -218,10 +220,16 @@ public class GameController : MonoBehaviour, IBeginDragHandler, IEndDragHandler,
         float x, y;
         x = (gameObj1.transform.position.x + gameObj2.transform.position.x) / 2;
         y = (gameObj1.transform.position.y + gameObj2.transform.position.y) / 2;
+        //x = (gameObj1.transform.localPosition.x + gameObj2.transform.localPosition.x) / 2;
+        //y = (gameObj1.transform.localPosition.y + gameObj2.transform.localPosition.y) / 2;
 
-        GameObject a = Instantiate(conect, new Vector3(x, y, 0), Quaternion.identity) as GameObject;
-        a.transform.SetParent(transform);
+        //GameObject a = Instantiate(conect, new Vector3(x, y, 0), Quaternion.identity) as GameObject;
+        GameObject a = SpawnGem(conect, "conect");
+        Vector3 pos = new Vector3(x, y, 0);
+        a.transform.SetParent(conectContainer);
+        a.transform.position = new Vector3(x, y, 0);
         a.transform.localScale = Vector3.one;
+        
         listConect.Add(a);
         Vector3 relative = gameObj1.transform.InverseTransformPoint(gameObj2.transform.position);
         float angle = Mathf.Atan2(relative.x, relative.y) * Mathf.Rad2Deg;
@@ -291,7 +299,7 @@ public class GameController : MonoBehaviour, IBeginDragHandler, IEndDragHandler,
                 a.transform.localScale = new Vector3(75, 75, 0);
                 a.transform.localPosition = pos;
 
-                DespawnGem(ListDelete[i].transform);
+                DespawnGem(ListDelete[i].transform, "gem");
 
                 Gem gem = ListDelete[i].GetComponent<Gem>();
                 arrGem[gem.row][gem.collumn] = null;                
@@ -302,7 +310,7 @@ public class GameController : MonoBehaviour, IBeginDragHandler, IEndDragHandler,
         //xoa listConect
         for (int i = 0; i < listConect.Count; i++)
         {
-            Destroy(listConect[i]);
+            DespawnGem(listConect[i].transform, "conect");
         }
 
         ListDelete.Clear();
@@ -575,18 +583,43 @@ public class GameController : MonoBehaviour, IBeginDragHandler, IEndDragHandler,
         }
     }
     //Random lai Map
+    [ContextMenu("RandomMap")]
     public void RandomMap()
     {
-        for (int i = 0; i < 7; i++)
+        for (int i = 0; i < countCollumn; i++)
         {
-            for (int j = 0; j < 8; j++)
+            for (int j = 0; j < countRow; j++)
             {
-                Destroy(arrGem[i][j]);
+                DespawnGem(arrGem[i][j].gameObject.transform,"gem");
+                InstantiateGem(i, j, 200);//in ra cac Object o vi tri PosIT        
             }
+        }
+        ReStart();
+        CheckListInvalid();
+    }
+    void ReStart()
+    {
+        activeAddtime = false;
+        activeTimeHelp = true;
+        activeHelp = false;
+        activeDestroyGem = false;
+        boolScale = false;
+        score = 0;
+        help = 0;
+        activeDestroyGem = false;
+        activeInstanDacBiet2 = false;
+        activeInstanDacBiet1 = false;
+        activeAddtime = false;
+        for (int i = 0; i < listConect.Count; i++)
+        {
+            Destroy(listConect[i]);
         }
         listConect.Clear();
         ListDelete.Clear();
+        listDacBiet.Clear();
         listLoangDau.Clear();
+        listMouse.Clear();
+        noname.ResetGame();
     }
     //no cac cuc theo chieu doc
     void NoTheoChieuNgang(int vitri)
