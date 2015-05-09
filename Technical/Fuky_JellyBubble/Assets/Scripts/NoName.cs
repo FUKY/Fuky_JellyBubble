@@ -39,7 +39,7 @@ public class NoName : MonoBehaviour {
     {
         if (totalDelete[i] > 15)
         {
-            int rand = Random.Range(0, 100);
+            int rand = Random.Range(60, 100);
 
             if (rand < 20)
             {

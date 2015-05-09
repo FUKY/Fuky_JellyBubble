@@ -19,7 +19,6 @@ public class Gem : MonoBehaviour {
     public bool check;
     public bool destroyCollum = false;
     public bool destroyRow = false;
-    public bool destroyColRow = false;
     public bool cucDacBiet = false;
     public bool timeAdd = false;
 
@@ -114,7 +113,6 @@ public class Gem : MonoBehaviour {
     {
         destroyCollum = false;
         destroyRow = false;
-        destroyColRow = false;
         cucDacBiet = false;
         timeAdd = false;
         for (int i = 0; i < gameObject.transform.childCount; i++ )
@@ -131,15 +129,11 @@ public class Gem : MonoBehaviour {
             Debug.Log("chua vao");
             return;
         }
-
         else
         {
             spriteChange = a.GetComponent<Gem>().spriteChange;
             spriteStart = a.GetComponent<Gem>().spriteStart;
-            Debug.Log("da vao");
         }
-        
-        
     }
     
     public int PosX()
@@ -177,6 +171,7 @@ public class Gem : MonoBehaviour {
     [ContextMenu("ChangleScale")]
     public void ChangleScale()
     {        
+
         //iTween.ValueTo(gameObject, iTween.Hash(
         //           iT.ValueTo.from, 0,
         //           iT.ValueTo.to, 1,

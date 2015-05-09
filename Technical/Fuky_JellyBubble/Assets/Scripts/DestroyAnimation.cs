@@ -12,11 +12,12 @@ public class DestroyAnimation : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-	
+
 	}
     void DestroyGem()
     {
         Destroy(gameObject);
         gameControl.activeDestroyGem = true;
     }
+
 }

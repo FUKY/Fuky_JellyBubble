@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using UnityEngine.UI;
+using System;
 
 public class Controller : MonoBehaviour
 {
@@ -8,7 +9,7 @@ public class Controller : MonoBehaviour
     public GameObject gameCore;
     public GameObject timeImgage;
     public GameObject gameStart;
-
+    
     public float timeGame = 60;
     public Text textTimeSecond;
     public Text textScore;
@@ -30,7 +31,7 @@ public class Controller : MonoBehaviour
         timeDelay = 0;
         timeGame = 60;
     }
-
+    float delayGameOver = 0;
     // Update is called once per frame
     void Update()
     {
@@ -39,19 +40,17 @@ public class Controller : MonoBehaviour
             if (timeDelay > 1)
             {
                 timeGame -= 1;
-                if (timeGame <= 0)
+                
+                if (timeGame < 0)
                 {
+                    timeGame = 0;
+                    gameControl.ListDelete.Clear();
                     textScore2.text = System.String.Format("Score : {0}", gameControl.score);
-                    
-                    if (gameControl.activeDestroyGem == true)
-                    {
-                        gameCore.active = false;
-                        gameOver.active = true;
-                    }
-                    
+                    gameOver.active = true;
                     SaveScore();
+                    MoveGameOver();                        
                 }
-                timeDelay = 0;
+                timeDelay = 0; 
             }
             timeDelay += Time.deltaTime;
             textTimeSecond.text = timeGame.ToString();
@@ -60,7 +59,6 @@ public class Controller : MonoBehaviour
              
             UpdateTime();
         }
-        
     }
     void UpdateTime()
     {
@@ -75,11 +73,13 @@ public class Controller : MonoBehaviour
         gameCore.active = true;
         ReStart();
         gameControl.RandomMap();
+        gameOver.transform.position = new Vector3(0, 900, 0);
 
     }
     public void AddTime()
     {
         timeGame += 10;
+        
     }
     public void SaveScore()
     {
@@ -89,6 +89,7 @@ public class Controller : MonoBehaviour
             PlayerPrefs.Save();
         }
         hightScore.text = "Hight Score: " + PlayerPrefs.GetInt("Score");
+        
     }
     public void GameStart()
     {
@@ -100,4 +101,43 @@ public class Controller : MonoBehaviour
     {
         Application.Quit();
     }
+    void MoveGameOver()
+    {
+        iTween.MoveTo(gameOver,
+            iTween.Hash(
+            iT.MoveTo.position, new Vector3(0, 0, 0),
+            iT.MoveTo.time, 0.5f
+            )
+            );
+    }
+    public GameObject timeSecond;
+    [ContextMenu("Scale")]
+    
+    void Scale()
+    {
+        iTween.ValueTo(timeSecond, iTween.Hash(
+                   iT.ValueTo.from, 0,
+                   iT.ValueTo.to, 1,
+                   iT.ValueTo.time, 2f,
+                   iT.ValueTo.onupdate, "ChangleScale",
+                   iT.MoveTo.oncompletetarget, gameObject
+                   ));
+        
+    }
+    [ContextMenu("Test")]
+    void Test()
+    {
+        ChangleScale(1);
+    }
+    void ChangleScale(float percent)
+    {
+        Debug.Log("da vao");
+        timeSecond.transform.localScale = new Vector3(2, 2, 0);
+        //timeSecond.transform.localScale = new Vector3(
+        //    1 + (0.5f - Math.Abs(percent - 0.5f)) * (1.5f - 1),
+        //     1 + (0.5f - Math.Abs(percent - 0.5f)) * (1.5f - 1),
+        //     1
+        //    );
+    }
+    
 }
