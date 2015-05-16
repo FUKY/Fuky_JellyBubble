@@ -53,6 +53,9 @@ public class GameController : MonoBehaviour, IBeginDragHandler, IEndDragHandler,
     public bool activeAddtime;
 
     private NoName noname;
+
+    public float disX;
+    public float disY;
     
 	// Use this for initialization
 	void Start () {
@@ -161,7 +164,7 @@ public class GameController : MonoBehaviour, IBeginDragHandler, IEndDragHandler,
         gemObj.GetComponent<Gem>().spriteStart = gemImageStart[index];
         gemObj.GetComponent<Gem>().spriteChange = gemImageChange[index];        
 
-        Vector3 pos = new Vector3((row - 3.0f) * 80, (collumn - 3.5f) * 72 + ItPos, 1);
+        Vector3 pos = new Vector3((row - 3.0f) * (80 + disX), (collumn - 3.5f) * (72 + disY) + ItPos, 1);
         gemObj.transform.SetParent(gemContainer);
         gemObj.transform.localScale = Vector3.one;
         gemObj.transform.localPosition = pos;
@@ -173,7 +176,7 @@ public class GameController : MonoBehaviour, IBeginDragHandler, IEndDragHandler,
         gemObj.GetComponent<Gem>().ResetSprite();
        // gemObj.GetComponent<Gem>().ResetSpriteStart();
         gemObj.GetComponent<Gem>().ResetActive();
-        Vector3 posIT = new Vector3((row - 3.0f) * 80, (collumn - 3.5f)* 72, 1);
+        Vector3 posIT = new Vector3((row - 3.0f) * (80 + disX), (collumn - 3.5f) * (72 + disY), 1);
 
         arrGem[row][collumn].GetComponent<Gem>().MovePosition(posIT, 0.5f);
         arrGem[row][collumn].GetComponent<Gem>().timeAdd = false;
@@ -221,23 +224,45 @@ public class GameController : MonoBehaviour, IBeginDragHandler, IEndDragHandler,
     }
     void InstantiateConect(GameObject gameObj1, GameObject gameObj2)
     {
+
         float x, y;
         x = (gameObj1.transform.position.x + gameObj2.transform.position.x) / 2;
         y = (gameObj1.transform.position.y + gameObj2.transform.position.y) / 2;
-        //x = (gameObj1.transform.localPosition.x + gameObj2.transform.localPosition.x) / 2;
-        //y = (gameObj1.transform.localPosition.y + gameObj2.transform.localPosition.y) / 2;
 
-        //GameObject a = Instantiate(conect, new Vector3(x, y, 0), Quaternion.identity) as GameObject;
         GameObject a = SpawnGem(conect, "conect");
-        Vector3 pos = new Vector3(x, y, 0);
+
         a.transform.SetParent(conectContainer);
-        a.transform.position = new Vector3(x, y, 0);
+        Vector3 pos = new Vector3(x, y, 0);
         a.transform.localScale = Vector3.one;
+        EffectController effect = a.GetComponent<EffectController>();
+
+        if (gameObj1.transform.position.x < gameObj2.transform.position.x || gameObj1.transform.position.y < gameObj2.transform.position.y)
+        {
+            effect.beginTrans = gameObj1.transform;
+            effect.targetTrans = gameObj2.transform;
+        }
+        else
+        {
+            effect.beginTrans =  gameObj2.transform;
+            effect.targetTrans = gameObj1.transform;
+        }
+
+        a.GetComponent<EffectController>().SetPosition();
+
+        //a.GetComponent<EffectController>().pos = (RectTransform)gameObj1.transform;
+        //a.GetComponent<EffectController>().targetTrans = (RectTransform)gameObj2.transform;
+        
+
+       
+        
+        //a.transform.localPosition = new Vector3(0, 0, 0);
+        
         
         listConect.Add(a);
-        Vector3 relative = gameObj1.transform.InverseTransformPoint(gameObj2.transform.position);
-        float angle = Mathf.Atan2(relative.x, relative.y) * Mathf.Rad2Deg;
-        a.transform.Rotate(0, 0, -angle);
+       // Vector3 relative = gameObj1.transform.InverseTransformPoint(gameObj2.transform.position);
+       // float angle = Mathf.Atan2(relative.x, relative.y) * Mathf.Rad2Deg;
+       //// a.transform.Rotate(0, 0, -angle);
+
     }
     void Xoa()
     {
@@ -414,7 +439,7 @@ public class GameController : MonoBehaviour, IBeginDragHandler, IEndDragHandler,
             if (!ListDelete.Contains(arrGem[x][y]) && ListDelete.Count >= 1)//kiem tra xem doi tuong chon da co trong ListDelete chua
             {
 
-                InstantiateConect(arrGem[x][y], ListDelete[ListDelete.Count - 1]);//xuat ket noi ra man hinh
+                InstantiateConect (ListDelete[ListDelete.Count - 1], arrGem[x][y]);//xuat ket noi ra man hinh
 
                 ListDelete.Add(arrGem[x][y]);
                 if (ListDelete[ListDelete.Count - 1] != null)
@@ -455,7 +480,7 @@ public class GameController : MonoBehaviour, IBeginDragHandler, IEndDragHandler,
             }
         }
         
-        Move(ListDelete, ListDelete[ListDelete.Count - 1]);
+        Move(ListDelete, arrGem[x][y]);
     }
     //public void OnDrag(PointerEventData eventData)
     //{      
@@ -571,7 +596,7 @@ public class GameController : MonoBehaviour, IBeginDragHandler, IEndDragHandler,
             
             if (arrGem[m][n + 1] != null)
             {
-                Vector3 pos = new Vector3((m - 3.0f) * 80, (n  - 3.5f) * 72, 0);
+                Vector3 pos = new Vector3((m - 3.0f) * (80 +disX), (n  - 3.5f) * (72 + disY), 0);
                 arrGem[m][n + 1].GetComponent<Gem>().MovePosition(pos, 0.5f);
                 arrGem[m][n + 1].GetComponent<Gem>().collumn -= 1 ;
                 arrGem[m][n] = arrGem[m][n + 1];
