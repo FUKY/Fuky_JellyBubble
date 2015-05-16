@@ -3,34 +3,39 @@ using System.Collections;
 
 public class EffectController : MonoBehaviour {
 
+    public int distance;
+
     public GameObject imageHead;
     public GameObject imageTail;
     public float speed;
     public float angle;
-    public Transform targetTrans;
-    public Transform beginTrans;
-    public Vector3 _pos;
+    //public Transform targetTrans;
+    //public Transform beginTrans;
+
+    public Vector3 posBegin;
+    //public Vector3 _pos;
 	// Use this for initialization
 	void Start () {
-        SetPosition();
+        //SetPosition();
 	}
 	
 	// Update is called once per frame
 	void Update () {
 
         SwapImage(imageHead);
-        //SwapImage(imageTail);
+        SwapImage(imageTail);
 
         Move(imageHead);
-        //Move(imageTail);
+        Move(imageTail);
 	
 	}
 
     void SwapImage(GameObject image)
     {
-        if (image.transform.localPosition.x > targetTrans.transform.localPosition.x - 10 || image.transform.localPosition.y > targetTrans.transform.localPosition.y - 10)
+        if (image.transform.localPosition.x > posBegin.x + distance)
         {
-            SetPosition();
+            SetPosBegin(image);
+            //SetPosition();
         }
     }
 
@@ -48,18 +53,34 @@ public class EffectController : MonoBehaviour {
     }
     void Move(GameObject image)
     {
-        angle = AngleRotation(beginTrans, targetTrans);       
-        SetRotation(image, angle);
+        //angle = AngleRotation(beginTrans, targetTrans);       
+        //SetRotation(image, angle);
 
-        float x = Mathf.Cos(Mathf.Deg2Rad * angle) * speed * Time.deltaTime;
-        float y = Mathf.Sin(Mathf.Deg2Rad * angle) * speed * Time.deltaTime;
+        //float x = Mathf.Cos(Mathf.Deg2Rad * angle) * speed * Time.deltaTime;
+        //float y = Mathf.Sin(Mathf.Deg2Rad * angle) * speed * Time.deltaTime;
 
-        image.transform.localPosition += new Vector3(x, y, 0);
+        float x = speed * Time.deltaTime;
+
+
+        image.transform.localPosition += new Vector3(x, 0, 0);
 
     }
-    public void SetPosition()
+
+    public void SetPosBegin(GameObject image) 
     {
-        imageHead.transform.position = beginTrans.position;
-        //imageTail.transform.position = new Vector3(pos.position - 50, pos.position.y, 0);
+        image.transform.localPosition -= new Vector3(distance * 2, 0, 0); ;
     }
+
+    public void SetPositionBetweenTwoGem(Transform gem1, Transform gem2) 
+    {
+        transform.position = (gem1.position + gem2.position) / 2;
+        float angleConnect = AngleRotation(gem1, gem2);
+        transform.rotation = Quaternion.Euler(0, 0, angleConnect);
+    }
+
+    //public void SetPosition()
+    //{
+    //    imageHead.transform.position = beginTrans.position;
+    //    //imageTail.transform.position = new Vector3(pos.position - 50, pos.position.y, 0);
+    //}
 }

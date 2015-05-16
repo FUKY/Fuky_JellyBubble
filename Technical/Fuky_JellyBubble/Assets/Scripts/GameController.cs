@@ -256,17 +256,19 @@ public class GameController : MonoBehaviour, IBeginDragHandler, IEndDragHandler,
         
         if (gameObj1.transform.localPosition.x < gameObj2.transform.localPosition.x || gameObj1.transform.localPosition.y < gameObj2.transform.localPosition.y)
         {
-            effect.beginTrans = (RectTransform)gameObj1.transform;
-            effect.targetTrans = (RectTransform)gameObj2.transform;
+            //effect.beginTrans = gameObj1.transform;
+            //effect.targetTrans = gameObj2.transform;
+            effect.SetPositionBetweenTwoGem(gameObj1.transform, gameObj2.transform);
         }
 
         else
         {
-            effect.beginTrans = (RectTransform)gameObj2.transform;
-            effect.targetTrans = (RectTransform)gameObj1.transform;
+            effect.SetPositionBetweenTwoGem(gameObj2.transform, gameObj1.transform);
+            //effect.beginTrans =  gameObj2.transform;
+            //effect.targetTrans = gameObj1.transform;
         }
 
-        a.GetComponent<EffectController>().SetPosition();
+        //a.GetComponent<EffectController>().SetPosition();
 
         //a.GetComponent<EffectController>().pos = (RectTransform)gameObj1.transform;
         //a.GetComponent<EffectController>().targetTrans = (RectTransform)gameObj2.transform;
@@ -461,7 +463,7 @@ public class GameController : MonoBehaviour, IBeginDragHandler, IEndDragHandler,
             if (!ListDelete.Contains(arrGem[x][y]) && ListDelete.Count >= 1)//kiem tra xem doi tuong chon da co trong ListDelete chua
             {
 
-                //InstantiateConect (ListDelete[ListDelete.Count - 1], arrGem[x][y]);//xuat ket noi ra man hinh
+                InstantiateConect (ListDelete[ListDelete.Count - 1], arrGem[x][y]);//xuat ket noi ra man hinh
 
                 ListDelete.Add(arrGem[x][y]);
                 if (ListDelete[ListDelete.Count - 1] != null)
