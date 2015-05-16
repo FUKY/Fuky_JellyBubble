@@ -1,21 +1,58 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.UI;
 
 public class ButtonController : MonoBehaviour {
 
-    
-	// Use this for initialization
-	void Start () {
-	
-	}
-	
-	// Update is called once per frame
-	void Update () {
-	    
-	}
+    public GameObject GameStart;
+    public GameObject GamePlay;
+    public GameObject GameOver;
+    public GameObject HighScore;
+    public bool isMute = false;
+    public Button buttonMute;
 
-    public void StartButton(GameObject gameObj)
+    void Start()
     {
-        gameObj.SetActive(false);
+
+    }
+
+    void Update()
+    {
+
+    }
+
+    public void StartButton()
+    {
+        gameObject.SetActive(false);
+        GamePlay.SetActive(true);
+    }
+
+    public void ExitButton()
+    {
+        Application.Quit();
+    }
+
+    public void Replay()
+    {
+        gameObject.SetActive(false);
+        GameStart.SetActive(true);
+    }
+
+    public void ToStartMenu()
+    {
+        gameObject.SetActive(false);
+        GameStart.SetActive(true);
+    }
+
+    public void ToHighScore()
+    {
+        gameObject.SetActive(false);
+        HighScore.SetActive(true);
+    }
+
+    public void MutePress()
+    {
+        isMute = true;
+
     }
 }
