@@ -4,30 +4,42 @@ using System.Collections.Generic;
 using System.IO;
 using MiniJSON;
 
+[System.Serializable]
+public class DataLevel
+{
+    public int sun;
+    public int water;
+    public int worm;
+}
+
 public class LevelConfig : MonoSingleton<LevelConfig> {
     //public Dictionary<GemType, int> gemNeccesary;//Nhung cuc can thiet de qua man
 
-    public Dictionary<int, Dictionary<GemType, int>> levelConfigs;// = new Dictionary<int,Dictionary<GemType,int>>();
+    //public Dictionary<int, Dictionary<GemType, int>> levelConfigs;// = new Dictionary<int,Dictionary<GemType,int>>();
 
     private string file;
 
+    public List<DataLevel> levelConfigs;
+
     void Start() 
     {
-        levelConfigs = new Dictionary<int, Dictionary<GemType, int>>();
+        //levelConfigs = new Dictionary<int, Dictionary<GemType, int>>();
         LoadLevel();
         //levelConfig = {1, {GemType.DAT, 2}};
     }
 
     void LoadLevel() 
     {
-        string json = "";
-        using (StreamReader r = new StreamReader("Assets/Resources/Level/level.json"))
-        {
-            json = r.ReadToEnd();
-            Debug.Log(System.String.Format("Level = {0}", json));
-            IDictionary response = (IDictionary)Json.Deserialize(json);
-            LoadConfigFromLevel(response);
-        }
+        //TextAsset t = new TextAsset();
+        //StreamReader r = new StreamReader()
+        //string json = "";
+        //using (StreamReader r = new StreamReader("Assets/Resources/Level/level.json"))
+        //{
+        //    json = r.ReadToEnd();
+        //    Debug.Log(System.String.Format("Level = {0}", json));
+        //    IDictionary response = (IDictionary)Json.Deserialize(json);
+        //    LoadConfigFromLevel(response);
+        //}
     }
 
     void LoadConfigFromLevel(IDictionary data) 
@@ -56,7 +68,7 @@ public class LevelConfig : MonoSingleton<LevelConfig> {
             levelConfig.Add(GemType.WORM, countWorm);
 
             //add vao list Config
-            levelConfigs.Add(numLevel, levelConfig);
+            //levelConfigs.Add(numLevel, levelConfig);
             //Debug.Log("water = " + countWater);
         }
 
@@ -65,7 +77,13 @@ public class LevelConfig : MonoSingleton<LevelConfig> {
 
     public Dictionary<GemType, int> GetLevelConfigByLevel(int level) 
     {
-        Dictionary<GemType, int> levelConfig = levelConfigs[level];
+        Dictionary<GemType, int> levelConfig = new Dictionary<GemType, int>();
         return levelConfig;
     }
+
+    public DataLevel GetDataLevelByLevel(int level) 
+    {
+        return levelConfigs[level];
+    }
+    
 }
