@@ -584,25 +584,15 @@ public class GameController : MonoBehaviour, IBeginDragHandler, IEndDragHandler,
     }
     int GetIndexGemX(Vector2 pos)
     {
-        int i = -1;
-        float a = ((pos.x + 40) / 80 + 3.0f);
-        int b = (int)((pos.x + 40) / 80 + 3.0f);
-        if (a > b + 0.2f && a < b + 1 - 0.2f)
-        {
-            i = (int)a;
-        }
-        return i;
+       
+        int  indexX = (int)((pos.x + 40) / 80 + 3.0f);
+        return indexX;
     }
     int GetIndexGemY(Vector2 pos)
     {
-        int j = -1;
-        float a = ((pos.y + 36) / 72 + 3.5f);
-        int b = (int)((pos.y + 36) / 72 + 3.5f);
-        if (a > b + 0.2f && a < b + 1 - 0.2f)
-        {
-            j = (int)a;
-        }
-        return j;
+        int indexY = (int)((pos.y + 36) / 72 + 3.5f);
+
+        return indexY;
     }
     Vector2 GetPositionTouch(PointerEventData eventData)
     {
