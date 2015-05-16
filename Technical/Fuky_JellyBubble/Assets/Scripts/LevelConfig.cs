@@ -59,5 +59,13 @@ public class LevelConfig : MonoBehaviour {
             levelConfigs.Add(numLevel, levelConfig);
             //Debug.Log("water = " + countWater);
         }
+
+        //int countWater1 = level1Config[GemType.WATER];
+    }
+
+    public Dictionary<GemType, int> GetLevelConfigByLevel(int level) 
+    {
+        Dictionary<GemType, int> levelConfig = levelConfigs[level];
+        return levelConfig;
     }
 }

@@ -4,6 +4,10 @@ using System.Collections;
 public class TreeController : MonoBehaviour {
 
     public int level;
+
+    public int countWater;
+    public int countSun;
+    public int countWorm;
     
 	// Use this for initialization
 	void Start () {
@@ -14,4 +18,9 @@ public class TreeController : MonoBehaviour {
 	void Update () {
 	
 	}
+
+    void LoadConfig(int level) 
+    {
+        
+    }
 }
