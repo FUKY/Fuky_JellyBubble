@@ -6,7 +6,7 @@ using System.IO;
 
 
 
-public class SaveScore : MonoBehaviour {
+public class SetScore : MonoBehaviour {
 
     public Text score;
     public Text highScoreText;
@@ -17,7 +17,7 @@ public class SaveScore : MonoBehaviour {
 
     }
 
-    void SaveScore()
+    void SetPoint()
     {
         if (int.Parse(score.text) > highScore)
         {
