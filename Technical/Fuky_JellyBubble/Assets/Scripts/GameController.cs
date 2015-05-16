@@ -297,56 +297,36 @@ public class GameController : MonoBehaviour, IBeginDragHandler, IEndDragHandler,
         {
             
             Gem _gem = ListDelete[0].GetComponent<Gem>();
-            if (_gem == null)
-            {
-                return;
-            }
-            if (_gem.inDex == 0)
-            {
-                countWarter += ListDelete.Count;
-            }
-            if (_gem.inDex == 1)
-            {
-                countSum += ListDelete.Count;
-            }
-            if (_gem.inDex == 2)
-            {
-                countWorm += ListDelete.Count;
-            }
-            if (_gem.inDex == 3)
-            {
-                countGround += ListDelete.Count;
-            }
-            if (_gem.inDex == 4)
-            {
-                countGarbage += ListDelete.Count;
-            }
+            //if (_gem == null)
+            //{
+            //    return;
+            //}
+            //if (_gem.inDex == 0)
+            //{
+            //    countWarter += ListDelete.Count;
+            //}
+            //if (_gem.inDex == 1)
+            //{
+            //    countSum += ListDelete.Count;
+            //}
+            //if (_gem.inDex == 2)
+            //{
+            //    countWorm += ListDelete.Count;
+            //}
+            //if (_gem.inDex == 3)
+            //{
+            //    countGround += ListDelete.Count;
+            //}
+            //if (_gem.inDex == 4)
+            //{
+            //    countGarbage += ListDelete.Count;
+            //}
 
             SubTotalGem(ListDelete.Count, _gem.inDex);
 
             noname.totalDelete[_gem.inDex] += ListDelete.Count;
             noname.Test(noname.totalDelete[_gem.inDex], _gem.inDex);
-            //for (int i = 0; i < 5; i++)
-            //{
-            //    if (_gem.inDex == i)
-            //    {                    
-            //        noname.totalDelete[i] += ListDelete.Count;
-
-            //        if (ListDelete.Count >= 5 && ListDelete.Count < 10)
-            //        {
-            //            float total = noname.totalDelete[i] * 1.3f;
-            //            noname.totalDelete[i] = (int)total;
-            //        }
-            //        if (ListDelete.Count >= 10)
-            //        {
-            //            float total = noname.totalDelete[i] * 1.5f;
-            //            noname.totalDelete[i] = (int)total;
-            //        }
-            //        noname.Test(noname.totalDelete[i], i);
-                    
-            //    }
-            //}
-
+           
            
             //xoa cac Gem trong listDelete
             for (int i = 0; i < ListDelete.Count; i++)
@@ -446,7 +426,31 @@ public class GameController : MonoBehaviour, IBeginDragHandler, IEndDragHandler,
 
         if (ListDelete.Count >= 3)
         {
-
+            Gem _g = ListDelete[1].GetComponent<Gem>();
+            if (_g == null)
+            {
+                return;
+            }
+            if (_g.inDex == 0)
+            {
+                countWarter += ListDelete.Count;
+            }
+            if (_g.inDex == 1)
+            {
+                countSum += ListDelete.Count;
+            }
+            if (_g.inDex == 2)
+            {
+                countWorm += ListDelete.Count;
+            }
+            if (_g.inDex == 3)
+            {
+                countGround += ListDelete.Count;
+            }
+            if (_g.inDex == 4)
+            {
+                countGarbage += ListDelete.Count;
+            }
             //kiem tra xem cac cuc dac biet co o trong listDelete khong
             for (int i = 0; i < ListDelete.Count; i++)
             {
