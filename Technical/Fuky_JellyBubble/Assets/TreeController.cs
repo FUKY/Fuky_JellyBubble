@@ -1,14 +1,13 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
+using UnityEngine.UI;
 
 public class TreeController : MonoBehaviour {
 
     public int level;
 
-    public int countWater;
-    public int countSun;
-    public int countWorm;
-    
+    public List<Image> listImageByLevel;
 	// Use this for initialization
 	void Start () {
 	
@@ -19,7 +18,7 @@ public class TreeController : MonoBehaviour {
 	
 	}
 
-    void LoadConfig(int level) 
+    public void SetLevel(int level) 
     {
         
     }
