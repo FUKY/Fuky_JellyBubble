@@ -39,15 +39,12 @@ public class Gem : MonoBehaviour {
         gameObject.GetComponent<Image>().sprite = spriteStart;
         indexStart = inDex;
         changle = spriteChange;
-        ResetSprite();
+        //ResetSprite();
     }
 
     // Update is called once per frame
     void Update()
     {
-       this.row1 = (int)PosX();
-       this.collumn1 = (int)PosY();
-
     }
 
     public void SetProfile(int col, int row, int index)
@@ -164,9 +161,10 @@ public class Gem : MonoBehaviour {
             iT.MoveTo.position, pos,//toi vi tri cuoi
             iT.MoveTo.islocal, true,
             iT.MoveTo.time, movetime,//thoi gian
-            iT.MoveTo.easetype, iTween.EaseType.easeOutBack,//hieu ung di chuyen
-            iT.MoveTo.oncomplete, "ChangleScale",
-            iT.MoveTo.oncompletetarget, gameObject));
+            iT.MoveTo.easetype, iTween.EaseType.easeOutBack//hieu ung di chuyen
+            //iT.MoveTo.oncomplete, "ChangleScale",
+            //iT.MoveTo.oncompletetarget, gameObject
+            ));
     }
     [ContextMenu("ChangleScale")]
     public void ChangleScale()

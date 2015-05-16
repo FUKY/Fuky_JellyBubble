@@ -202,6 +202,7 @@ public class GameController : MonoBehaviour, IBeginDragHandler, IEndDragHandler,
         gemObj.GetComponent<Gem>().spriteChange = gemImageChange[index];        
 
         Vector3 pos = new Vector3((row - 3.0f) * (80 + disX), (collumn - 3.5f) * (72 + disY) + ItPos, 1);
+        
         gemObj.transform.SetParent(gemContainer);
         gemObj.transform.localScale = Vector3.one;
         gemObj.transform.localPosition = pos;
@@ -212,12 +213,11 @@ public class GameController : MonoBehaviour, IBeginDragHandler, IEndDragHandler,
 
         gemObj.GetComponent<Gem>().ResetSprite();
        // gemObj.GetComponent<Gem>().ResetSpriteStart();
-        gemObj.GetComponent<Gem>().ResetActive();
-        Vector3 posIT = new Vector3((row - 3.0f) * (80 + disX), (collumn - 3.5f) * (72 + disY), 1);
+        //gemObj.GetComponent<Gem>().ResetActive();
 
+        Vector3 posIT = new Vector3((row - 3.0f) * (80 + disX), (collumn - 3.5f) * (72 + disY), 1);
         arrGem[row][collumn].GetComponent<Gem>().MovePosition(posIT, 0.5f);
-        arrGem[row][collumn].GetComponent<Gem>().timeAdd = false;
- 
+         
     }
 
     public GameObject SpawnGem( GameObject obj, string nameSpawnPool) 
@@ -317,42 +317,41 @@ public class GameController : MonoBehaviour, IBeginDragHandler, IEndDragHandler,
             {
                 countGarbage += ListDelete.Count;
             }
+
             SubTotalGem(ListDelete.Count, _gem.inDex);
 
-            UpdateLevel();
+            noname.totalDelete[_gem.inDex] += ListDelete.Count;
+            noname.Test(noname.totalDelete[_gem.inDex], _gem.inDex);
+            //for (int i = 0; i < 5; i++)
+            //{
+            //    if (_gem.inDex == i)
+            //    {                    
+            //        noname.totalDelete[i] += ListDelete.Count;
 
-            for (int i = 0; i < 5; i++)
-            {
-                if (_gem.inDex == i)
-                {
+            //        if (ListDelete.Count >= 5 && ListDelete.Count < 10)
+            //        {
+            //            float total = noname.totalDelete[i] * 1.3f;
+            //            noname.totalDelete[i] = (int)total;
+            //        }
+            //        if (ListDelete.Count >= 10)
+            //        {
+            //            float total = noname.totalDelete[i] * 1.5f;
+            //            noname.totalDelete[i] = (int)total;
+            //        }
+            //        noname.Test(noname.totalDelete[i], i);
                     
-                    noname.totalDelete[i] += ListDelete.Count;
-
-                    if (ListDelete.Count >= 5 && ListDelete.Count < 10)
-                    {
-                        float total = noname.totalDelete[i] * 1.3f;
-                        noname.totalDelete[i] = (int)total;
-                    }
-                    if (ListDelete.Count >= 10)
-                    {
-                        float total = noname.totalDelete[i] * 1.5f;
-                        noname.totalDelete[i] = (int)total;
-                    }
-
-                    noname.Test(noname.totalDelete[i], i);
-                    
-                }
-            }
+            //    }
+            //}
             //kiem tra xem cac cuc dac biet co o trong listDelete khong
             for (int i = 0; i < countCollumn; i++)
             {
                 for (int j = 0; j < countRow; j++)
                 {
-                    if (arrGem[i][j].GetComponent<Gem>().destroyCollum == true && ListDelete.Contains(arrGem[i][j]))
+                    if (ListDelete.Contains(arrGem[i][j]) &&arrGem[i][j].GetComponent<Gem>().destroyCollum == true )
                     {
                         NoTheoChieuNgang(i);
                     }
-                    if (arrGem[i][j].GetComponent<Gem>().destroyRow == true && ListDelete.Contains(arrGem[i][j]))
+                    if (ListDelete.Contains(arrGem[i][j]) && arrGem[i][j].GetComponent<Gem>().destroyRow == true )
                     {
                         NoTheoChieuDoc(j);
                     }
@@ -362,29 +361,26 @@ public class GameController : MonoBehaviour, IBeginDragHandler, IEndDragHandler,
             //xoa cac Gem trong listDelete
             for (int i = 0; i < ListDelete.Count; i++)
             {
-                if (ListDelete[i].GetComponent<Gem>().cucDacBiet == true)
+                Gem _gemDel = ListDelete[i].GetComponent<Gem>();
+                if (_gemDel.cucDacBiet == true)
                 {
                     for (int m = 0; m < listDacBiet.Count; m++)
                     {
                         listDacBiet[m].GetComponent<Gem>().Test(ListDelete[i]);
                     }
                 }
-                if (ListDelete[i].GetComponent<Gem>().timeAdd == true && ListDelete[i] != null)
-                {
-                    if (ListDelete[i].transform.childCount == 1)
-                        ListDelete[i].GetComponentInChildren<TimeController>().UpdateParent();
-                    ListDelete[i].GetComponent<Gem>().timeAdd = false;
-                    
-                }
+                
                 Vector3 pos = new Vector3(ListDelete[i].transform.localPosition.x, ListDelete[i].transform.localPosition.y, -9000);
                 GameObject a = Instantiate(destroyGem, Vector3.one, Quaternion.identity) as GameObject;
                 a.transform.SetParent(gemContainer);
                 a.transform.localScale = new Vector3(75, 75, 0);
                 a.transform.localPosition = pos;
 
-                DespawnGem(ListDelete[i].transform, "gem");
+                _gemDel.ResetActive();
 
+                DespawnGem(ListDelete[i].transform, "gem");
                 Gem gem = ListDelete[i].GetComponent<Gem>();
+
                 arrGem[gem.row][gem.collumn] = null;                
                 score += 10;
             }
@@ -395,7 +391,7 @@ public class GameController : MonoBehaviour, IBeginDragHandler, IEndDragHandler,
         {
             DespawnGem(listConect[i].transform, "conect");
         }
-
+        //UpdateLevel();
         ListDelete.Clear();
         listConect.Clear();
         listMouse.Clear();
@@ -638,28 +634,29 @@ public class GameController : MonoBehaviour, IBeginDragHandler, IEndDragHandler,
             if (arrGem[m][n + 1] != null)
             {
                 Vector3 pos = new Vector3((m - 3.0f) * (80 + disX), (n  - 3.5f) * (72 + disY), 0);
-                arrGem[m][n + 1].GetComponent<Gem>().MovePosition(pos, 0.5f);
-                arrGem[m][n + 1].GetComponent<Gem>().collumn -= 1 ;
+                Gem _gem = arrGem[m][n + 1].GetComponent<Gem>();
+                _gem.GetComponent<Gem>().collumn -= 1;
+                _gem.MovePosition(pos, 0.5f);
+                
                 arrGem[m][n] = arrGem[m][n + 1];
                 arrGem[m][n + 1] = null;
             }
         }
     }
     void CacCucRoiXuong()
-    {
-        
+    {        
         for (int i = 0; i < countCollumn; i++)
         {
             if (arrGem[i][countRow - 1] == null)
             {
                 InstantiateGem(i, countRow - 1, iTwenPos);
             }
-            for (int j = 0; j < countRow -1 ; j++)
+            for (int j = 0; j < countRow - 1 ; j++)
             {                
                 DiChuyenCacCuc(i, j);
             }
         }
-        CheckListInvalid();
+        //CheckListInvalid();
         
     }
     //kiem tra xem con duong de an khong
