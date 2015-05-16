@@ -816,7 +816,7 @@ public class GameController : MonoBehaviour, IBeginDragHandler, IEndDragHandler,
         {
             if (!ListDelete.Contains(arrGem[i][vitri]))
             {
-                if (arrGem[vitri][i] != null)
+                if (arrGem[i][vitri] != null)
                     ListDelete.Add(arrGem[i][vitri]);
             }
         }
