@@ -71,9 +71,20 @@ public class GameController : MonoBehaviour, IBeginDragHandler, IEndDragHandler,
 
     public float disX;
     public float disY;
+
+    public int level;
+    private int countWarter = 0;
+    private int countSum = 0;
+    private int countWorm = 0;
+    private int countGround = 0;
+    private int countGarbage = 0;
+
+    public TreeController treeController;
     
 	// Use this for initialization
 	void Start () {
+        level = 1;
+        LoadLevel();
         noname = GameObject.Find("Canvas").GetComponentInChildren<NoName>();
         if (noname == null)
         {
@@ -95,6 +106,12 @@ public class GameController : MonoBehaviour, IBeginDragHandler, IEndDragHandler,
 	}
     void FixedUpdate()
     {
+        UpdateLevel();
+        if (uplevel == true)
+        {
+            LoadLevel();
+            uplevel = false;
+        }
         CacCucRoiXuong();
         if(activeDestroyGem == true)
         {
@@ -267,37 +284,45 @@ public class GameController : MonoBehaviour, IBeginDragHandler, IEndDragHandler,
         else
         {
             effect.SetPositionBetweenTwoGem(gameObj2.transform, gameObj1.transform);
-            //effect.beginTrans =  gameObj2.transform;
-            //effect.targetTrans = gameObj1.transform;
-        }
-
-        //a.GetComponent<EffectController>().SetPosition();
-
-        //a.GetComponent<EffectController>().pos = (RectTransform)gameObj1.transform;
-        //a.GetComponent<EffectController>().targetTrans = (RectTransform)gameObj2.transform;
-        
-
-       
-        
-        //a.transform.localPosition = new Vector3(0, 0, 0);
-        
+        }        
         
         listConect.Add(a);
-       // Vector3 relative = gameObj1.transform.InverseTransformPoint(gameObj2.transform.position);
-       // float angle = Mathf.Atan2(relative.x, relative.y) * Mathf.Rad2Deg;
-       //// a.transform.Rotate(0, 0, -angle);
-
     }
     void Xoa()
     {
         //xoa cac cuc        
         if (ListDelete.Count >= 3)
         {
-            SubTotalGem(ListDelete.Count, ListDelete[0].GetComponent<Gem>().inDex);
+            Gem _gem = ListDelete[0].GetComponent<Gem>();
+            if (_gem == null)
+            {
+                return;
+            }
+            if (_gem.inDex == 0)
+            {
+                countWarter += ListDelete.Count;
+            }
+            if (_gem.inDex == 1)
+            {
+                countSum += ListDelete.Count;
+            }
+            if (_gem.inDex == 2)
+            {
+                countWorm += ListDelete.Count;
+            }
+            if (_gem.inDex == 3)
+            {
+                countGround += ListDelete.Count;
+            }
+            if (_gem.inDex == 4)
+            {
+                countGarbage += ListDelete.Count;
+            }
+            SubTotalGem(ListDelete.Count, _gem.inDex);
 
             for (int i = 0; i < 5; i++)
             {
-                if (ListDelete[0].GetComponent<Gem>().inDex == i)
+                if (_gem.inDex == i)
                 {
                     
                     noname.totalDelete[i] += ListDelete.Count;
@@ -934,6 +959,49 @@ public class GameController : MonoBehaviour, IBeginDragHandler, IEndDragHandler,
                 obj.GetComponent<Gem>().destroyRow = true;
             }
         }
+    }
+
+    private int _countWarter;
+    private int _countSum;
+    private int _countWorm;
+    private int _countGround;
+    private int _countGarbage;
+    private bool uplevel = false;
+    void LoadLevel()
+    {
+        Dictionary<GemType, int> levelConfig = LevelConfig.Instance.GetLevelConfigByLevel(level);
+
+        _countWarter = levelConfig[GemType.WATER];
+        _countSum = levelConfig[GemType.SUN];
+        _countWorm = levelConfig[GemType.WORM];
+        Debug.Log("Level = "+ level);
+        Debug.Log(System.String.Format("Warter = {0}, Sum = {1}, Worm = {2}, Ground = {3}, Garbage = {4}", _countWarter, _countSum, _countWorm, _countGround, _countGarbage));
+    }
+    void UpdateLevel()
+    {
+        if (_countWarter - countWarter <= 0 && _countSum - countSum <= 0 && _countWorm - countWorm <= 0 )
+        {
+            level++;
+            uplevel = true;
+            
+            Debug.Log("Up Level");
+            treeController.SetLevel(level);
+            ResetCount();
+        }
+    }
+    void ResetCount()
+    {
+        countWarter = 0;
+        countSum = 0;
+        countWorm = 0;
+    }
+    public int GetCountGround()
+    {
+        return countGround;
+    }
+    public int GetGarbage()
+    {
+        return countGarbage;
     }
    
 }
