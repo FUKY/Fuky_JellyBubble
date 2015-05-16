@@ -289,7 +289,7 @@ public class GameController : MonoBehaviour, IBeginDragHandler, IEndDragHandler,
         
         listConect.Add(a);
     }
-    
+    private List<GameObject> listItween = new List<GameObject>();
     void Xoa()
     {
         //xoa cac cuc        
@@ -388,11 +388,7 @@ public class GameController : MonoBehaviour, IBeginDragHandler, IEndDragHandler,
             }
         }
 
-        //xoa listConect
-        for (int i = 0; i < listConect.Count; i++)
-        {
-            DespawnGem(listConect[i].transform, "conect");
-        }
+        
         UpdateLevel();
         ListDelete.Clear();
         listConect.Clear();
@@ -407,6 +403,7 @@ public class GameController : MonoBehaviour, IBeginDragHandler, IEndDragHandler,
 
     public void OnBeginDrag(PointerEventData eventData)
     {
+        listItween.Clear();
         //GetGemTouchPosition(GetPositionTouch(eventData));
         //return;
         Vector2 pos = GetPositionTouch(eventData);
@@ -426,6 +423,7 @@ public class GameController : MonoBehaviour, IBeginDragHandler, IEndDragHandler,
         if (ListDelete.Count == 0 && arrGem[i][j].GetComponent<Gem>().cucDacBiet == false)
         {
             ListDelete.Add(arrGem[i][j]);
+            listItween.Add(arrGem[i][j]);
             listMouse.Add(arrGem[i][j]);
             ListDelete[ListDelete.Count - 1].GetComponent<Gem>().ChangSprite();
         }
@@ -453,11 +451,54 @@ public class GameController : MonoBehaviour, IBeginDragHandler, IEndDragHandler,
             ListDelete[1].GetComponent<Gem>().ResetSprite();
             activeDestroyGem = true;
         }
+        //xoa listConect
         
-        Xoa();
+        if (ListDelete.Count >= 3)
+        {
+
+            for (int i = 0; i < ListDelete.Count; i++)
+            {
+                Gem _gem = ListDelete[0].GetComponent<Gem>();
+                if (_gem.inDex ==0)
+                {
+                    MoveItween(ListDelete[i], sumTransform.localPosition, 0.4f);
+                }
+                if (_gem.inDex == 1)
+                {
+                    MoveItween(ListDelete[i],  warterTranform.localPosition , 0.4f);
+                }
+                if (_gem.inDex == 2)
+                {
+                    MoveItween(ListDelete[i], wormTransform.localPosition, 0.4f);
+                }
+                if (_gem.inDex == 3)
+                {
+                    MoveItween(ListDelete[i], groundTransform.localPosition, 0.4f);
+                }
+                if (_gem.inDex == 4)
+                {
+                    MoveItween(ListDelete[i], garbageTransform.localPosition, 0.4f);
+                }                
+            }
+        }
+        for (int i = 0; i < listConect.Count; i++)
+        {
+            DespawnGem(listConect[i].transform, "conect");
+        }
+        //Xoa();
         
         activeTimeHelp = true;
         activeInstanDacBiet2 = true;
+    }
+    public void MoveItween(GameObject obj, Vector3 pos, float movetime)
+    {
+        iTween.MoveTo(obj, iTween.Hash(
+            iT.MoveTo.position, pos,//toi vi tri cuoi
+            iT.MoveTo.islocal, true,
+            iT.MoveTo.time, movetime,//thoi gian
+            iT.MoveTo.oncomplete, "Xoa",
+            iT.MoveTo.oncompletetarget, gameObject
+            ));
     }
     public void OnDrag(PointerEventData eventData)
     {
@@ -492,6 +533,7 @@ public class GameController : MonoBehaviour, IBeginDragHandler, IEndDragHandler,
                 InstantiateConect (ListDelete[ListDelete.Count - 1], arrGem[x][y]);//xuat ket noi ra man hinh
 
                 ListDelete.Add(arrGem[x][y]);
+                listItween.Add(arrGem[x][y]);
                 SetSoundDrag(ListDelete);
                 if (ListDelete[ListDelete.Count - 1] != null)
                 {
@@ -510,8 +552,10 @@ public class GameController : MonoBehaviour, IBeginDragHandler, IEndDragHandler,
             {
                 if (arrGem[x][y] == ListDelete[ListDelete.Count - 2] && listConect.Count >= 1)//neu nguoi choi quay lai cuc phia trc co
                 {
+                    //listItween.Add(ListDelete[ListDelete.Count - 1]);
                     ListDelete[ListDelete.Count - 1].GetComponent<Gem>().ResetSprite();
                     ListDelete.RemoveAt(ListDelete.Count - 1);
+                    
                     Destroy(listConect[listConect.Count - 1]);
                     listConect.RemoveAt(listConect.Count - 1);
                     SetSoundDrag(ListDelete);
@@ -534,6 +578,7 @@ public class GameController : MonoBehaviour, IBeginDragHandler, IEndDragHandler,
         
         //Move(ListDelete, arrGem[x][y]);
     }
+   
     void SetSoundDelete(int index)
     {
         if (index == 0)
@@ -1037,6 +1082,12 @@ public class GameController : MonoBehaviour, IBeginDragHandler, IEndDragHandler,
             }
         }
     }
+
+    public RectTransform sumTransform;
+    public RectTransform warterTranform;
+    public RectTransform wormTransform;
+    public RectTransform groundTransform;
+    public RectTransform garbageTransform;
 
     private int _countWarter;
     private int _countSum;

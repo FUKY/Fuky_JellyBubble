@@ -40,7 +40,7 @@ public class Gem : MonoBehaviour {
         gameObject.GetComponent<Image>().sprite = spriteStart;
         indexStart = inDex;
         changle = spriteChange;
-        ResetSprite();
+        //ResetSprite();
     }
 
     // Update is called once per frame
@@ -162,14 +162,29 @@ public class Gem : MonoBehaviour {
             iT.MoveTo.position, pos,//toi vi tri cuoi
             iT.MoveTo.islocal, true,
             iT.MoveTo.time, movetime,//thoi gian
-            iT.MoveTo.easetype, iTween.EaseType.easeOutBack//hieu ung di chuyen
-            //iT.MoveTo.oncomplete, "ChangleScale",
-            //iT.MoveTo.oncompletetarget, gameObject
+            iT.MoveTo.easetype, iTween.EaseType.easeOutBack,//hieu ung di chuyen
+            iT.MoveTo.oncomplete, "ChangleScale",
+            iT.MoveTo.oncompletetarget, gameObject
             ));
+    }
+    public void MoveItween(Vector3 pos, float movetime)
+    {
+        iTween.MoveTo(gameObject, iTween.Hash(
+            iT.MoveTo.position, pos,//toi vi tri cuoi
+            iT.MoveTo.islocal, true,
+            iT.MoveTo.time, movetime,//thoi gian
+            iT.MoveTo.oncomplete, "DestroyItween",
+            iT.MoveTo.oncompletetarget, gameObject
+            ));
+    }
+    public void DestroyItween()
+    {
+        Destroy(gameObject);
     }
     [ContextMenu("ChangleScale")]
     public void ChangleScale()
     { 
+        //Destroy(gameObject);
     }
 
     void UpdateScale(float percent)
