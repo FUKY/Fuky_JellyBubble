@@ -83,7 +83,7 @@ public class GameController : MonoBehaviour, IBeginDragHandler, IEndDragHandler,
     
 	// Use this for initialization
 	void Start () {
-        level = 1;
+        level = 0;
         LoadLevel();
         noname = GameObject.Find("Canvas").GetComponentInChildren<NoName>();
         if (noname == null)
@@ -972,11 +972,13 @@ public class GameController : MonoBehaviour, IBeginDragHandler, IEndDragHandler,
     private bool uplevel = false;
     void LoadLevel()
     {
-        Dictionary<GemType, int> levelConfig = LevelConfig.Instance.GetLevelConfigByLevel(level);
+        //Dictionary<GemType, int> levelConfig = LevelConfig.Instance.GetLevelConfigByLevel(level);
 
-        _countWarter = levelConfig[GemType.WATER];
-        _countSum = levelConfig[GemType.SUN];
-        _countWorm = levelConfig[GemType.WORM];
+        DataLevel dataLevel = LevelConfig.Instance.GetDataLevelByLevel(level);
+
+        _countWarter = dataLevel.water;//levelConfig[GemType.WATER];
+        _countSum = dataLevel.sun;//levelConfig[GemType.SUN];
+        _countWorm = dataLevel.worm;//levelConfig[GemType.WORM];
         Debug.Log("Level = "+ level);
         Debug.Log(System.String.Format("Warter = {0}, Sum = {1}, Worm = {2}, Ground = {3}, Garbage = {4}", _countWarter, _countSum, _countWorm, _countGround, _countGarbage));
     }

@@ -52,7 +52,7 @@ public class TreeController : MonoBehaviour {
     public void ScaleOut()
     {
         Debug.Log("Scale Out");
-        image.sprite = listImageByLevel[level - 1];
+        image.sprite = listImageByLevel[level];
         iTween.ScaleTo(gameObject, iTween.Hash(
             iT.ScaleTo.delay, timeDelay,
             iT.ScaleTo.x, 1.0,
