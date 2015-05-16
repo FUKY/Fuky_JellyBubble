@@ -21,7 +21,8 @@ public class Gem : MonoBehaviour {
     public bool destroyRow = false;
     public bool cucDacBiet = false;
     public bool timeAdd = false;
-
+    public int disX;
+    public int disY;
     private GameObject a;
     Sprite start;
     Sprite changle;
@@ -135,12 +136,12 @@ public class Gem : MonoBehaviour {
     
     public int PosX()
     {
-        int posX = (int)(gameObject.transform.localPosition.x / 80 + 3.0f);
+        int posX = (int)((gameObject.transform.localPosition.x ) / (80 + disX) + 3.0f);
         return posX;
     }
     public int PosY()
     {
-        int posY = (int)((gameObject.transform.localPosition.y+ 36f )/ 72 + 3.5f);
+        int posY = (int)((gameObject.transform.localPosition.y + 36f + 10)/ (72 + disY) + 3.5f);
         return posY; 
     }
     public void MovePositionStar(Vector3 pos, float movetime)

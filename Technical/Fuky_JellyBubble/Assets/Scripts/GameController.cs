@@ -214,6 +214,7 @@ public class GameController : MonoBehaviour, IBeginDragHandler, IEndDragHandler,
         gemObj.GetComponent<Gem>().ResetSprite();
        // gemObj.GetComponent<Gem>().ResetSpriteStart();
         gemObj.GetComponent<Gem>().ResetActive();
+        
 
         Vector3 posIT = new Vector3((row - 3.0f) * (80 + disX), (collumn - 3.5f) * (72 + disY), 1);
         arrGem[row][collumn].GetComponent<Gem>().MovePosition(posIT, 0.5f);
@@ -376,8 +377,6 @@ public class GameController : MonoBehaviour, IBeginDragHandler, IEndDragHandler,
                 a.transform.localScale = new Vector3(75, 75, 0);
                 a.transform.localPosition = pos;
 
-                _gemDel.ResetActive();
-
                 DespawnGem(ListDelete[i].transform, "gem");
                 Gem gem = ListDelete[i].GetComponent<Gem>();
 
@@ -391,7 +390,7 @@ public class GameController : MonoBehaviour, IBeginDragHandler, IEndDragHandler,
         {
             DespawnGem(listConect[i].transform, "conect");
         }
-        //UpdateLevel();
+        UpdateLevel();
         ListDelete.Clear();
         listConect.Clear();
         listMouse.Clear();
@@ -844,7 +843,7 @@ public class GameController : MonoBehaviour, IBeginDragHandler, IEndDragHandler,
         {
             for (int n = j - 1; n <= j + 1; n++ )
             {
-                if (m >= 0 && n >= 0 && m < countCollumn && n<countRow && arrGem[m][n] != arrGem[i][j])
+                if (m >= 0 && n >= 0 && m < countCollumn && n < countRow && arrGem[m][n] != arrGem[i][j])
                 {
                     //arrGem[m][n].GetComponent<Gem>().ChangSpriteDacBiet(arrGem[i][j]);  
                     if (!ListDelete.Contains(arrGem[m][n]))
