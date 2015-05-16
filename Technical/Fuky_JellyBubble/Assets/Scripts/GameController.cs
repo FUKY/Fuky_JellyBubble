@@ -101,6 +101,8 @@ public class GameController : MonoBehaviour, IBeginDragHandler, IEndDragHandler,
         activeTimeHelp = true;
         RandomGem();// random hinh anh khi moi dua vao game o vi tri ItweenPos	
         CheckListInvalid();
+
+        _countGround = 20;
 	}
 	
 	// Update is called once per frame
@@ -447,10 +449,14 @@ public class GameController : MonoBehaviour, IBeginDragHandler, IEndDragHandler,
             if (_g.inDex == 3)
             {
                 countGround += ListDelete.Count;
+                _countGround += ListDelete.Count;
+                SetFillAmuontGarbage();
             }
             if (_g.inDex == 4)
             {
                 countGarbage += ListDelete.Count;
+                _countGarbage += ListDelete.Count;
+                SetFillAmuontGarbage();
             }
             //kiem tra xem cac cuc dac biet co o trong listDelete khong
             for (int i = 0; i < ListDelete.Count; i++)
@@ -1105,11 +1111,11 @@ public class GameController : MonoBehaviour, IBeginDragHandler, IEndDragHandler,
     public RectTransform groundTransform;
     public RectTransform garbageTransform;
 
-    private int _countWarter;
-    private int _countSum;
-    private int _countWorm;
-    private int _countGround;
-    private int _countGarbage;
+    private float _countWarter;
+    private float _countSum;
+    private float _countWorm;
+    private float _countGround;
+    private float _countGarbage;
     private bool uplevel = false;
     void LoadLevel()
     {
@@ -1128,6 +1134,10 @@ public class GameController : MonoBehaviour, IBeginDragHandler, IEndDragHandler,
         _countWarter -= countWarter;
         _countSum -= countSum;
         _countWorm -= countWorm;
+
+        countWarter = 0;
+        countSum = 0;
+        countWorm = 0;
         CheckMoveTouch();
         
         if (_countWarter <= 0 && _countSum <= 0 && _countWorm<= 0 )
@@ -1171,8 +1181,25 @@ public class GameController : MonoBehaviour, IBeginDragHandler, IEndDragHandler,
         }
         else
         {
-            _imageGarbage.fillAmount = _countGround / _countGarbage;
+            if (_countGround == 0 && _countGarbage > 0)
+            {
+                GameOver();
+            }
+            else 
+            {
+                Debug.Log("Ground = " + _countGround + " - counr garbage = " + _countGarbage);
+                float fillAmount = (float)(_countGarbage / _countGround);
+                _imageGarbage.fillAmount = fillAmount;
+                
+                if (fillAmount > 1.0)
+                {
+                    GameOver();
+                }
+            }
+            
         }
+
+        //_imageGarbage.fillAmount = 0.5f;
     }
    void CheckMoveTouch()
    {
@@ -1180,7 +1207,7 @@ public class GameController : MonoBehaviour, IBeginDragHandler, IEndDragHandler,
    }
     void SetTextGUI()
    {
-       //textScore.text = score.ToString();
+       textScore.text = score.ToString();
        
        textMove.text = move.ToString();
        textWarter.text = _countWarter.ToString();
