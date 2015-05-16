@@ -9,6 +9,12 @@ public class TreeController : MonoBehaviour {
 
     public List<Sprite> listImageByLevel;
 
+    public Transform appleContainer;
+    public Transform effectContainer;
+
+    public GameObject effectGroundUp;
+    public GameObject prefabApple;
+
     private Image image;
 
     public float timeScaleIn;
@@ -47,12 +53,28 @@ public class TreeController : MonoBehaviour {
             iT.ScaleTo.time, timeScaleIn,
             iT.ScaleTo.oncomplete, "ScaleOut",
             iT.ScaleTo.oncompletetarget, gameObject));
+
+        GameObject effect = Instantiate(effectGroundUp, Vector3.one, Quaternion.identity) as GameObject;
+        effect.transform.SetParent(effectContainer);
+        effect.transform.localScale = Vector3.one;
+        effect.transform.localPosition = Vector3.zero;
     }
 
     public void ScaleOut()
     {
         Debug.Log("Scale Out");
-        image.sprite = listImageByLevel[level];
+        if (level <= 5)
+        {
+            image.sprite = listImageByLevel[level];
+        }
+        else 
+        {
+            GameObject apple = Instantiate(prefabApple, Vector3.one, Quaternion.identity) as GameObject;
+            apple.transform.SetParent(appleContainer);
+            apple.transform.localScale = Vector3.one;
+            apple.transform.localPosition = Vector3.zero;
+        }
+        
         iTween.ScaleTo(gameObject, iTween.Hash(
             iT.ScaleTo.delay, timeDelay,
             iT.ScaleTo.x, 1.0,

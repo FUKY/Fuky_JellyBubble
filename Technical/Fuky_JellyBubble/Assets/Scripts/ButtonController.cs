@@ -25,27 +25,32 @@ public class ButtonController : MonoBehaviour {
     {
         gameObject.SetActive(false);
         GamePlay.SetActive(true);
+        PlayButtonClick();
     }
 
     public void ExitButton()
     {
+        PlayButtonClick();
         Application.Quit();
     }
 
     public void Replay()
     {
+        PlayButtonClick();
         gameObject.SetActive(false);
         GameStart.SetActive(true);
     }
 
     public void ToStartMenu()
     {
+        PlayButtonClick();
         gameObject.SetActive(false);
         GameStart.SetActive(true);
     }
 
     public void ToHighScore()
     {
+        PlayButtonClick();
         gameObject.SetActive(false);
         HighScore.SetActive(true);
     }
@@ -53,6 +58,11 @@ public class ButtonController : MonoBehaviour {
     public void MutePress()
     {
         isMute = true;
+        AudioController.Instance.PressMute();
+    }
 
+    public void PlayButtonClick() 
+    {
+        AudioController.Instance.PlaySound(AudioType.BUTTON_CLICK);
     }
 }
