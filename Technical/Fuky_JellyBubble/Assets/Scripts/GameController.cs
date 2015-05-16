@@ -213,7 +213,7 @@ public class GameController : MonoBehaviour, IBeginDragHandler, IEndDragHandler,
 
         gemObj.GetComponent<Gem>().ResetSprite();
        // gemObj.GetComponent<Gem>().ResetSpriteStart();
-        //gemObj.GetComponent<Gem>().ResetActive();
+        gemObj.GetComponent<Gem>().ResetActive();
 
         Vector3 posIT = new Vector3((row - 3.0f) * (80 + disX), (collumn - 3.5f) * (72 + disY), 1);
         arrGem[row][collumn].GetComponent<Gem>().MovePosition(posIT, 0.5f);
@@ -656,7 +656,7 @@ public class GameController : MonoBehaviour, IBeginDragHandler, IEndDragHandler,
                 DiChuyenCacCuc(i, j);
             }
         }
-        //CheckListInvalid();
+        CheckListInvalid();
         
     }
     //kiem tra xem con duong de an khong
@@ -844,13 +844,15 @@ public class GameController : MonoBehaviour, IBeginDragHandler, IEndDragHandler,
         {
             for (int n = j - 1; n <= j + 1; n++ )
             {
-                if (m >= 0 && n >= 0 && m<countCollumn && n<countRow && arrGem[m][n] != arrGem[i][j])
+                if (m >= 0 && n >= 0 && m < countCollumn && n<countRow && arrGem[m][n] != arrGem[i][j])
                 {
                     //arrGem[m][n].GetComponent<Gem>().ChangSpriteDacBiet(arrGem[i][j]);  
                     if (!ListDelete.Contains(arrGem[m][n]))
                     {
                         SubTotalGem(1, arrGem[m][n].GetComponent<Gem>().inDex);
+
                         arrGem[m][n].GetComponent<Gem>().ChangSpriteDacBiet(arrGem[i][j]);
+
                         totalGem(arrGem[m][n].GetComponent<Gem>().inDex);
                         if (arrGem[m][n].GetComponent<Gem>().cucDacBiet == false)
                             listDacBiet.Add(arrGem[m][n]);
