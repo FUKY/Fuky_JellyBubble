@@ -5,7 +5,12 @@ using UnityEngine.UI;
 
 public class TreeController : MonoBehaviour {
 
-    public int level;
+    private int level;
+
+    public int score_level;
+
+    public int disX;
+    public int disY;
 
     public List<Sprite> listImageByLevel;
 
@@ -35,13 +40,15 @@ public class TreeController : MonoBehaviour {
     public void SetLevel(int _level) 
     {
         level = _level;
+        
         ScaleIn();
+        AudioController.Instance.PlaySound(AudioType.LEVEL_UP);
     }
 
     [ContextMenu("TestLevel")]
     public void TestLevel() 
     {
-        SetLevel(3);
+        SetLevel(6);
     }
 
     public void ScaleIn()
@@ -64,16 +71,21 @@ public class TreeController : MonoBehaviour {
     public void ScaleOut()
     {
         Debug.Log("Scale Out");
-        if (level <= 5)
+        if (level < 5)
         {
             image.sprite = listImageByLevel[level];
         }
         else 
         {
+            image.sprite = listImageByLevel[4];
             GameObject apple = Instantiate(prefabApple, Vector3.one, Quaternion.identity) as GameObject;
             apple.transform.SetParent(appleContainer);
             apple.transform.localScale = Vector3.one;
-            apple.transform.localPosition = Vector3.zero;
+
+            int x = Random.Range(-disX, disX);
+            int y = Random.Range(-disY, disY);
+
+            apple.transform.localPosition = new Vector3(x, y, 0);
         }
         
         iTween.ScaleTo(gameObject, iTween.Hash(

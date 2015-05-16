@@ -56,5 +56,12 @@ public class AudioController : MonoSingleton<AudioController> {
     public void PressMute() 
     {
         isSoundGamePlay = !isSoundGamePlay;
+        Debug.Log("Press Mute Sound Game Play = " + isSoundGamePlay);
+    }
+
+    public void PressMuteSoundBG()
+    {
+        isSoundBG = !isSoundBG;
+        Debug.Log("Press Mute Sound BG = " + isSoundBG);
     }
 }
