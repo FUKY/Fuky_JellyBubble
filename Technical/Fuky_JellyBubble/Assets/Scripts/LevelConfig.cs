@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using MiniJSON;
 
-public class LevelConfig : MonoBehaviour {
+public class LevelConfig : MonoSingleton<LevelConfig> {
     //public Dictionary<GemType, int> gemNeccesary;//Nhung cuc can thiet de qua man
 
     public Dictionary<int, Dictionary<GemType, int>> levelConfigs;// = new Dictionary<int,Dictionary<GemType,int>>();
