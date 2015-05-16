@@ -169,14 +169,7 @@ public class Gem : MonoBehaviour {
     }
     [ContextMenu("ChangleScale")]
     public void ChangleScale()
-    {        
-
-        //iTween.ValueTo(gameObject, iTween.Hash(
-        //           iT.ValueTo.from, 0,
-        //           iT.ValueTo.to, 1,
-        //           iT.ValueTo.time, 0.3f
-        //           //iT.ValueTo.onupdate, "UpdateScale"
-        //           ));
+    { 
     }
 
     void UpdateScale(float percent)

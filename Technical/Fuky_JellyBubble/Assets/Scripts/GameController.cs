@@ -15,6 +15,7 @@ public class GameController : MonoBehaviour, IBeginDragHandler, IEndDragHandler,
     public GameObject conect;
     public GameObject destroyGem;
     public Sprite[] image;
+    public RectTransform ouRectGem;
 
     [HideInInspector]
     public List<GameObject> ListDelete;//list Object de xoa
@@ -377,11 +378,11 @@ public class GameController : MonoBehaviour, IBeginDragHandler, IEndDragHandler,
                 a.transform.localScale = new Vector3(75, 75, 0);
                 a.transform.localPosition = pos;
 
-                DespawnGem(ListDelete[i].transform, "gem");
                 Gem gem = ListDelete[i].GetComponent<Gem>();
-
                 arrGem[gem.row][gem.collumn] = null;                
                 score += 10;
+
+                DespawnGem(ListDelete[i].transform, "gem");
             }
         }
 
