@@ -1167,7 +1167,7 @@ public class GameController : MonoBehaviour, IBeginDragHandler, IEndDragHandler,
         Image _imageGarbage = garbage.GetComponent<Image>();
         if (_countGarbage == 0)
         {
-            _imageGarbage.fillAmount = 1;
+            _imageGarbage.fillAmount = 0;
         }
         else
         {
@@ -1189,7 +1189,7 @@ public class GameController : MonoBehaviour, IBeginDragHandler, IEndDragHandler,
    }
     void GameOver()
     {
-        if (move <= 0 || garbage.GetComponent<Image>().fillAmount == 0)
+        if (move <= 0 || garbage.GetComponent<Image>().fillAmount == 1)
         {
             GameObject.Find("Canvas").GetComponent<ButtonController>().CheckGameOver();
         }

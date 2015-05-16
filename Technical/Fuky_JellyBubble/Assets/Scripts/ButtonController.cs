@@ -37,13 +37,16 @@ public class ButtonController : MonoBehaviour {
     public void Replay()
     {
         PlayButtonClick();
-        gameObject.SetActive(false);
-        GameStart.SetActive(true);
+        GamePlay.SetActive(true);
+        GameOver.SetActive(false);
+        //gameObject.GetComponent<GameController>().RandomMap();
     }
 
     public void ToStartMenu()
     {
+
         PlayButtonClick();
+        
         gameObject.SetActive(false);
         GameStart.SetActive(true);
     }
