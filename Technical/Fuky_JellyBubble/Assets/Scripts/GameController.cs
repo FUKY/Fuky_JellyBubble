@@ -123,7 +123,7 @@ public class GameController : MonoBehaviour, IBeginDragHandler, IEndDragHandler,
             CacCucRoiXuong();
             if (activeAddtime == true)
             {
-                InstantiateTimeStar();
+                //InstantiateTimeStar();
                 
             }
             if (listLoangDau.Count == 0)//neu k con duong nao de an Ramdom lai map
