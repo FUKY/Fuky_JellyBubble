@@ -86,6 +86,7 @@ public class GameController : MonoBehaviour, IBeginDragHandler, IEndDragHandler,
 	void Start () {
         level = 0;
         LoadLevel();
+        SetTextGUI();
         noname = GameObject.Find("Canvas").GetComponentInChildren<NoName>();
         if (noname == null)
         {
@@ -288,6 +289,7 @@ public class GameController : MonoBehaviour, IBeginDragHandler, IEndDragHandler,
         
         listConect.Add(a);
     }
+    
     void Xoa()
     {
         //xoa cac cuc        
@@ -377,11 +379,11 @@ public class GameController : MonoBehaviour, IBeginDragHandler, IEndDragHandler,
                 a.transform.SetParent(gemContainer);
                 a.transform.localScale = new Vector3(75, 75, 0);
                 a.transform.localPosition = pos;
-
+                SetSoundDelete(ListDelete[0].GetComponent<Gem>().inDex);
                 Gem gem = ListDelete[i].GetComponent<Gem>();
                 arrGem[gem.row][gem.collumn] = null;                
                 score += 10;
-
+                
                 DespawnGem(ListDelete[i].transform, "gem");
             }
         }
@@ -490,6 +492,7 @@ public class GameController : MonoBehaviour, IBeginDragHandler, IEndDragHandler,
                 InstantiateConect (ListDelete[ListDelete.Count - 1], arrGem[x][y]);//xuat ket noi ra man hinh
 
                 ListDelete.Add(arrGem[x][y]);
+                SetSoundDrag(ListDelete);
                 if (ListDelete[ListDelete.Count - 1] != null)
                 {
                     ListDelete[ListDelete.Count - 1].GetComponent<Gem>().ChangSprite();
@@ -511,6 +514,7 @@ public class GameController : MonoBehaviour, IBeginDragHandler, IEndDragHandler,
                     ListDelete.RemoveAt(ListDelete.Count - 1);
                     Destroy(listConect[listConect.Count - 1]);
                     listConect.RemoveAt(listConect.Count - 1);
+                    SetSoundDrag(ListDelete);
                 }
             }
             for (int i = 0; i < listMouse.Count; i++)
@@ -529,6 +533,68 @@ public class GameController : MonoBehaviour, IBeginDragHandler, IEndDragHandler,
         }
         
         //Move(ListDelete, arrGem[x][y]);
+    }
+    void SetSoundDelete(int index)
+    {
+        if (index == 0)
+        {
+            AudioController.Instance.PlaySound(AudioType.REMOVE_LIGHT);
+        }
+        if (index == 1)
+        {
+            AudioController.Instance.PlaySound(AudioType.REMOVE_SOIL);
+        }
+        if (index == 2)
+        {
+            AudioController.Instance.PlaySound(AudioType.REMOVE_TRASH);
+        }
+        if (index == 3)
+        {
+            AudioController.Instance.PlaySound(AudioType.REMOVE_WATER);
+        }
+        if (index == 4)
+        {
+            AudioController.Instance.PlaySound(AudioType.REMOVE_WORM);
+        }
+    }
+    void SetSoundDrag(List<GameObject> listObj)
+    {
+        if (listObj.Count == 2)
+        {
+            AudioController.Instance.PlaySound(AudioType.SG_MERGER1);
+        }
+        if (listObj.Count == 3)
+        {
+            AudioController.Instance.PlaySound(AudioType.SG_MERGER2);
+        }
+        if (listObj.Count == 4)
+        {
+            AudioController.Instance.PlaySound(AudioType.SG_MERGER3);
+        }
+        if (listObj.Count == 5)
+        {
+            AudioController.Instance.PlaySound(AudioType.SG_MERGER4);
+        }
+        if (listObj.Count == 6)
+        {
+            AudioController.Instance.PlaySound(AudioType.SG_MERGER5);
+        }
+        if (listObj.Count == 7)
+        {
+            AudioController.Instance.PlaySound(AudioType.SG_MERGER6);
+        }
+        if (listObj.Count == 8)
+        {
+            AudioController.Instance.PlaySound(AudioType.SG_MERGER7);
+        }
+        if (listObj.Count == 9)
+        {
+            AudioController.Instance.PlaySound(AudioType.SG_MERGER8);
+        }
+        if (listObj.Count >= 10)
+        {
+            AudioController.Instance.PlaySound(AudioType.SG_MERGER9);
+        }
     }
     //public void OnDrag(PointerEventData eventData)
     //{      
@@ -995,16 +1061,18 @@ public class GameController : MonoBehaviour, IBeginDragHandler, IEndDragHandler,
         _countWarter -= countWarter;
         _countSum -= countSum;
         _countWorm -= countWorm;
-        SetTextGUI();
+        CheckMoveTouch();
+        
         if (_countWarter <= 0 && _countSum <= 0 && _countWorm<= 0 )
         {
             level++;
-            uplevel = true;
-            
+            uplevel = true;            
             Debug.Log("Up Level");
             treeController.SetLevel(level);
             ResetCount();
         }
+        
+        SetTextGUI();
     }
     void ResetCount()
     {
@@ -1025,6 +1093,7 @@ public class GameController : MonoBehaviour, IBeginDragHandler, IEndDragHandler,
     public Text textSum;
     public Text textWorm;
     public Text textMove;
+    public Text textScore;
     public int move;
     void SetFillAmuontGarbage()
     {
@@ -1044,10 +1113,11 @@ public class GameController : MonoBehaviour, IBeginDragHandler, IEndDragHandler,
    }
     void SetTextGUI()
    {
-       CheckMoveTouch();
+       //textScore.text = score.ToString();
+       
        textMove.text = move.ToString();
-       textSum.text = _countSum.ToString();
        textWarter.text = _countWarter.ToString();
+       textSum.text = _countSum.ToString();       
        textWorm.text = _countWorm.ToString();
    }
 }
