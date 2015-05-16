@@ -802,7 +802,11 @@ public class GameController : MonoBehaviour, IBeginDragHandler, IEndDragHandler,
         for (int i = 0; i < countRow; i++)
         {
             if (!ListDelete.Contains(arrGem[vitri][i]))
-                ListDelete.Add(arrGem[vitri][i]);
+            {
+                if (arrGem[vitri][i] != null)
+                    ListDelete.Add(arrGem[vitri][i]);
+            }
+                
         }
     }
     //no cac cuc theo chieu ngang
@@ -811,7 +815,10 @@ public class GameController : MonoBehaviour, IBeginDragHandler, IEndDragHandler,
         for (int i = 0; i < countCollumn; i++)
         {
             if (!ListDelete.Contains(arrGem[i][vitri]))
-                ListDelete.Add(arrGem[i][vitri]);
+            {
+                if (arrGem[vitri][i] != null)
+                    ListDelete.Add(arrGem[i][vitri]);
+            }
         }
     }
     void ResetCucDacBiet(int i, int j)
@@ -984,7 +991,11 @@ public class GameController : MonoBehaviour, IBeginDragHandler, IEndDragHandler,
     }
     void UpdateLevel()
     {
-        if (_countWarter - countWarter <= 0 && _countSum - countSum <= 0 && _countWorm - countWorm <= 0 )
+        _countWarter -= countWarter;
+        _countSum -= countSum;
+        _countWorm -= countWorm;
+        SetTextGUI();
+        if (_countWarter <= 0 && _countSum <= 0 && _countWorm<= 0 )
         {
             level++;
             uplevel = true;
@@ -1008,6 +1019,34 @@ public class GameController : MonoBehaviour, IBeginDragHandler, IEndDragHandler,
     {
         return countGarbage;
     }
-
-   
+    public GameObject garbage;
+    public Text textWarter;
+    public Text textSum;
+    public Text textWorm;
+    public Text textMove;
+    public int move;
+    void SetFillAmuontGarbage()
+    {
+        Image _imageGarbage = garbage.GetComponent<Image>();
+        if (_countGarbage == 0)
+        {
+            _imageGarbage.fillAmount = 1;
+        }
+        else
+        {
+            _imageGarbage.fillAmount = _countGround / _countGarbage;
+        }
+    }
+   void CheckMoveTouch()
+   {
+       move -= 1;
+   }
+    void SetTextGUI()
+   {
+       CheckMoveTouch();
+       textMove.text = move.ToString();
+       textSum.text = _countSum.ToString();
+       textWarter.text = _countWarter.ToString();
+       textWorm.text = _countWorm.ToString();
+   }
 }
