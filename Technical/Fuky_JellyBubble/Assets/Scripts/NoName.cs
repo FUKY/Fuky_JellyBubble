@@ -47,11 +47,11 @@ public class NoName : MonoBehaviour {
             }
             if (rand > 20 && rand < 60)
             {
-                gameController.indexRandom = 0;
+                gameController.indexRandom = 1;
             }
             if (rand > 60)
             {
-                gameController.indexRandom = 1;
+                gameController.indexRandom = 0;
             }
             totalDelete[i] = 0;
             gameController.activeInstanDacBiet1 = true;

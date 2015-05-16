@@ -11,7 +11,7 @@ public class GameController : MonoBehaviour, IBeginDragHandler, IEndDragHandler,
     public Sprite[] gemImageChange;
     public GameObject gemPrefabs;
     private GameObject[] listGem;//list cac gem_Prefabs
-    private GameObject[] cucDacBiet;//list cac gem_Prefabs
+    public GameObject[] cucDacBiet;//list cac gem_Prefabs
     public GameObject conect;
     public GameObject destroyGem;
     public Sprite[] image;
@@ -112,14 +112,14 @@ public class GameController : MonoBehaviour, IBeginDragHandler, IEndDragHandler,
             LoadLevel();
             uplevel = false;
         }
-        CacCucRoiXuong();
+        
         if(activeDestroyGem == true)
         {
 
             if (activeInstanDacBiet1 == true && activeInstanDacBiet2 == true)
             {
                 InstantiateItemDacBiet(); 
-            }            
+            }
             CacCucRoiXuong();
             if (activeAddtime == true)
             {
@@ -276,8 +276,6 @@ public class GameController : MonoBehaviour, IBeginDragHandler, IEndDragHandler,
         
         if (gameObj1.transform.localPosition.x < gameObj2.transform.localPosition.x || gameObj1.transform.localPosition.y < gameObj2.transform.localPosition.y)
         {
-            //effect.beginTrans = gameObj1.transform;
-            //effect.targetTrans = gameObj2.transform;
             effect.SetPositionBetweenTwoGem(gameObj1.transform, gameObj2.transform);
         }
 
@@ -338,7 +336,7 @@ public class GameController : MonoBehaviour, IBeginDragHandler, IEndDragHandler,
                         noname.totalDelete[i] = (int)total;
                     }
 
-                    //noname.Test(noname.totalDelete[i], i);
+                    noname.Test(noname.totalDelete[i], i);
                     
                 }
             }
@@ -376,10 +374,10 @@ public class GameController : MonoBehaviour, IBeginDragHandler, IEndDragHandler,
                     
                 }
                 Vector3 pos = new Vector3(ListDelete[i].transform.localPosition.x, ListDelete[i].transform.localPosition.y, -9000);
-                //GameObject a = Instantiate(destroyGem, Vector3.one, Quaternion.identity) as GameObject;
-                //a.transform.SetParent(gemContainer);
-                //a.transform.localScale = new Vector3(75, 75, 0);
-                //a.transform.localPosition = pos;
+                GameObject a = Instantiate(destroyGem, Vector3.one, Quaternion.identity) as GameObject;
+                a.transform.SetParent(gemContainer);
+                a.transform.localScale = new Vector3(75, 75, 0);
+                a.transform.localPosition = pos;
 
                 DespawnGem(ListDelete[i].transform, "gem");
 
@@ -866,8 +864,12 @@ public class GameController : MonoBehaviour, IBeginDragHandler, IEndDragHandler,
     void InstantiateItemDacBiet()
     {
         //int indexRandom;
-        int vitriX = Random.Range(0, countCollumn);
-        int vitriY = Random.Range(0, countRow);
+        int vitriX = Random.Range(0, countCollumn - 1);
+        int vitriY = Random.Range(0, countRow - 1);
+        if(arrGem[vitriX][vitriY] == null)
+        {
+            return;
+        }
         if (arrGem[vitriX][vitriY] != null && arrGem[vitriX][vitriY].GetComponent<Gem>().cucDacBiet != true)
         {
             if (indexRandom == 0)
@@ -877,14 +879,14 @@ public class GameController : MonoBehaviour, IBeginDragHandler, IEndDragHandler,
                 dacbiet.transform.parent = arrGem[vitriX][vitriY].transform;
                 dacbiet.transform.localScale = Vector3.one;
             }
-            if (indexRandom == 1)
+            if (indexRandom == 1 )
             {
                 arrGem[vitriX][vitriY].GetComponent<Gem>().destroyRow = true;
                 GameObject dacbiet = Instantiate(cucDacBiet[1], arrGem[vitriX][vitriY].transform.position, Quaternion.identity) as GameObject;
                 dacbiet.transform.parent = arrGem[vitriX][vitriY].transform;
                 dacbiet.transform.localScale = Vector3.one;
             }
-            if (indexRandom == 2)
+            if (indexRandom == 2 )
             {
                 arrGem[vitriX][vitriY].GetComponent<Gem>().cucDacBiet = true;
                 GameObject dacbiet = Instantiate(cucDacBiet[2], arrGem[vitriX][vitriY].transform.position, Quaternion.identity) as GameObject;
@@ -1003,5 +1005,6 @@ public class GameController : MonoBehaviour, IBeginDragHandler, IEndDragHandler,
     {
         return countGarbage;
     }
+
    
 }
