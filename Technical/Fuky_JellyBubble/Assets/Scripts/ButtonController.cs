@@ -39,7 +39,7 @@ public class ButtonController : MonoBehaviour {
         PlayButtonClick();
         GamePlay.SetActive(true);
         GameOver.SetActive(false);
-        //gameObject.GetComponent<GameController>().RandomMap();
+        GamePlay.GetComponentInChildren<GameController>().ReStart();
     }
 
     public void ToStartMenu()
@@ -71,6 +71,6 @@ public class ButtonController : MonoBehaviour {
     public void CheckGameOver()
     {
         GameOver.SetActive(true);
-        GamePlay.SetActive(false);
+        //GamePlay.SetActive(false);
     }
 }

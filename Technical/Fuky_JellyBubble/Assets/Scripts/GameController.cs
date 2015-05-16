@@ -919,6 +919,7 @@ public class GameController : MonoBehaviour, IBeginDragHandler, IEndDragHandler,
         boolScale = false;
         score = 0;
         help = 0;
+        move = 2;
         activeInstanDacBiet2 = false;
         activeInstanDacBiet1 = false;
         activeAddtime = false;
