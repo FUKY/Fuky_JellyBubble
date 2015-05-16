@@ -346,21 +346,7 @@ public class GameController : MonoBehaviour, IBeginDragHandler, IEndDragHandler,
                     
             //    }
             //}
-            //kiem tra xem cac cuc dac biet co o trong listDelete khong
-            for (int i = 0; i < countCollumn; i++)
-            {
-                for (int j = 0; j < countRow; j++)
-                {
-                    if (ListDelete.Contains(arrGem[i][j]) &&arrGem[i][j].GetComponent<Gem>().destroyCollum == true )
-                    {
-                        NoTheoChieuNgang(i);
-                    }
-                    if (ListDelete.Contains(arrGem[i][j]) && arrGem[i][j].GetComponent<Gem>().destroyRow == true )
-                    {
-                        NoTheoChieuDoc(j);
-                    }
-                }
-            }
+
            
             //xoa cac Gem trong listDelete
             for (int i = 0; i < ListDelete.Count; i++)
@@ -373,12 +359,6 @@ public class GameController : MonoBehaviour, IBeginDragHandler, IEndDragHandler,
                         listDacBiet[m].GetComponent<Gem>().Test(ListDelete[i]);
                     }
                 }
-                
-                Vector3 pos = new Vector3(ListDelete[i].transform.localPosition.x, ListDelete[i].transform.localPosition.y, -9000);
-                GameObject a = Instantiate(destroyGem, Vector3.one, Quaternion.identity) as GameObject;
-                a.transform.SetParent(gemContainer);
-                a.transform.localScale = new Vector3(75, 75, 0);
-                a.transform.localPosition = pos;
                 SetSoundDelete(ListDelete[0].GetComponent<Gem>().inDex);
                 Gem gem = ListDelete[i].GetComponent<Gem>();
                 arrGem[gem.row][gem.collumn] = null;                
@@ -431,31 +411,66 @@ public class GameController : MonoBehaviour, IBeginDragHandler, IEndDragHandler,
     }
     public void OnEndDrag(PointerEventData eventData)
     {
+        for (int i = 0; i < listConect.Count; i++)
+        {
+            DespawnGem(listConect[i].transform, "conect");
+        }
         if (ListDelete.Count == 1)
         {
             ListDelete[0].GetComponent<Gem>().ResetSprite();
-            activeDestroyGem = true;
+            ListDelete.Clear();
+            listConect.Clear();
+            listMouse.Clear();
+            listLoangDau.Clear();
+            listDacBiet.Clear();
+            //activeDestroyGem = true;
         }
         if (ListDelete.Count == 2)
-        {
-            
+        {            
             if (ListDelete[1].GetComponent<Gem>().cucDacBiet == true)
             {
                 int a = ListDelete[1].gameObject.GetComponent<Gem>().PosX();
                 int b = ListDelete[1].gameObject.GetComponent<Gem>().PosY();
-                ResetCucDacBiet(a, b);
-                
-                
+                ResetCucDacBiet(a, b);               
             }
             ListDelete[0].GetComponent<Gem>().ResetSprite();
             ListDelete[1].GetComponent<Gem>().ResetSprite();
-            activeDestroyGem = true;
+            ListDelete.Clear();
+            listConect.Clear();
+            listMouse.Clear();
+            listLoangDau.Clear();
+            listDacBiet.Clear();
         }
         //xoa listConect
         
+
         if (ListDelete.Count >= 3)
         {
 
+            //kiem tra xem cac cuc dac biet co o trong listDelete khong
+            for (int i = 0; i < ListDelete.Count; i++)
+            {
+                Gem _gemDacBiet = ListDelete[i].GetComponent<Gem>();
+                if (_gemDacBiet.destroyCollum == true)
+                {
+                    NoTheoChieuNgang(_gemDacBiet.row);
+                }
+                if (_gemDacBiet.destroyRow == true)
+                {
+                    NoTheoChieuDoc(_gemDacBiet.collumn);
+                }
+            }
+           
+            for (int i = 0; i < ListDelete.Count; i++)
+            {
+                Vector3 pos = new Vector3(ListDelete[i].transform.localPosition.x, ListDelete[i].transform.localPosition.y, -9000);
+
+                GameObject _destroy = Instantiate(destroyGem, Vector3.one, Quaternion.identity) as GameObject;
+                _destroy.transform.SetParent(gemContainer);
+                _destroy.transform.localScale = new Vector3(75, 75, 0);
+                _destroy.transform.localPosition = pos;
+            }
+            
             for (int i = 0; i < ListDelete.Count; i++)
             {
                 Gem _gem = ListDelete[0].GetComponent<Gem>();
@@ -481,10 +496,9 @@ public class GameController : MonoBehaviour, IBeginDragHandler, IEndDragHandler,
                 }                
             }
         }
-        for (int i = 0; i < listConect.Count; i++)
-        {
-            DespawnGem(listConect[i].transform, "conect");
-        }
+        
+        
+        
         //Xoa();
         
         activeTimeHelp = true;
@@ -1069,13 +1083,10 @@ public class GameController : MonoBehaviour, IBeginDragHandler, IEndDragHandler,
                 GameObject dacbiet;
                 dacbiet = lDeleTe[i].transform.GetChild(0).gameObject;
 
-                Debug.Log(dacbiet.transform.localPosition);
+                dacbiet.transform.localPosition = new Vector3(obj.transform.position.x, obj.transform.position.y, 0);
 
-                dacbiet.transform.localPosition = new Vector3(lDeleTe[i].transform.position.x, lDeleTe[i].transform.position.y, 0);
+                dacbiet.transform.SetParent(obj.transform);
 
-                dacbiet.transform.SetParent(ListDelete[ListDelete.Count -1].transform);
-
-                Debug.Log(dacbiet.transform.localPosition);
                 dacbiet.transform.localScale = Vector3.one;
                 lDeleTe[i].GetComponent<Gem>().destroyRow = false;
                 obj.GetComponent<Gem>().destroyRow = true;

@@ -40,7 +40,7 @@ public class Gem : MonoBehaviour {
         gameObject.GetComponent<Image>().sprite = spriteStart;
         indexStart = inDex;
         changle = spriteChange;
-        //ResetSprite();
+        ResetSprite();
     }
 
     // Update is called once per frame
