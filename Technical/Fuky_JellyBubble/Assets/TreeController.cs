@@ -47,6 +47,11 @@ public class TreeController : MonoBehaviour {
     public void ScaleIn()
     {
         Debug.Log("Scale In");
+        GameObject effect = Instantiate(effectGroundUp, Vector3.one, Quaternion.identity) as GameObject;
+        effect.transform.SetParent(effectContainer);
+        effect.transform.localScale = Vector3.one;
+        effect.transform.localPosition = Vector3.zero;
+
         iTween.ScaleTo(gameObject, iTween.Hash(
             iT.ScaleTo.x, 0.5,
             iT.ScaleTo.y, 0.5,
@@ -54,10 +59,6 @@ public class TreeController : MonoBehaviour {
             iT.ScaleTo.oncomplete, "ScaleOut",
             iT.ScaleTo.oncompletetarget, gameObject));
 
-        GameObject effect = Instantiate(effectGroundUp, Vector3.one, Quaternion.identity) as GameObject;
-        effect.transform.SetParent(effectContainer);
-        effect.transform.localScale = Vector3.one;
-        effect.transform.localPosition = Vector3.zero;
     }
 
     public void ScaleOut()
