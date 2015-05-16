@@ -10,23 +10,33 @@ public class GameController : MonoBehaviour, IBeginDragHandler, IEndDragHandler,
     public Sprite[] gemImageStart;
     public Sprite[] gemImageChange;
     public GameObject gemPrefabs;
-    public GameObject[] listGem;//list cac gem_Prefabs
-    public GameObject[] cucDacBiet;//list cac gem_Prefabs
+    private GameObject[] listGem;//list cac gem_Prefabs
+    private GameObject[] cucDacBiet;//list cac gem_Prefabs
     public GameObject conect;
     public GameObject destroyGem;
     public Sprite[] image;
+
+    [HideInInspector]
     public List<GameObject> ListDelete;//list Object de xoa
+
     public RectTransform canvasRectTransform;
 
     public int countRow;//so hang cua mang
     public int countCollumn;//so cot cua mang
     public int iTwenPos;//vi tri in ra luc dau
-    public float localScale = 1;//kich thuc gem
+    private float localScale = 1;//kich thuc gem
+
+    [HideInInspector]
     public bool activeTimeHelp = false;
+
     public float timeHelp = 5;
+
+    [HideInInspector]
     public bool activeDestroyGem = false;
+
+    [HideInInspector]
     public int score = 0;
-    public Transform tranfsIn;
+    private Transform tranfsIn;
     public Transform tranfsOut;
     public GameObject timeStar;
     public Transform gemContainer;
@@ -34,9 +44,9 @@ public class GameController : MonoBehaviour, IBeginDragHandler, IEndDragHandler,
 
 
     private GameObject[][] arrGem;//list Game Object hien ra man hinh
-    private RaycastHit2D rayHit;
+    //private RaycastHit2D rayHit;
 
-    public List<GameObject> listConect;//tao lien ket cho cac cuc(sau nay thanh thanh Animation)
+    private List<GameObject> listConect;//tao lien ket cho cac cuc(sau nay thanh thanh Animation)
     private List<List<GameObject>> listLoangDau;//kiem tra con duong nao de an khong
     private List<GameObject> listMouse;
     //private int index;//so thu tu cac Prefabs   
@@ -46,10 +56,15 @@ public class GameController : MonoBehaviour, IBeginDragHandler, IEndDragHandler,
     private float help;
     //private Gem gem;
     //private int vitriX, vitriY;
-    public bool activeInstanDacBiet1 = false;
-    public bool activeInstanDacBiet2 = false;
-    public int indexRandom;
 
+    [HideInInspector]
+    public bool activeInstanDacBiet1 = false;
+    private bool activeInstanDacBiet2 = false;
+
+    [HideInInspector]
+    public int indexRandom;
+    
+    [HideInInspector]
     public bool activeAddtime;
 
     private NoName noname;
@@ -201,14 +216,14 @@ public class GameController : MonoBehaviour, IBeginDragHandler, IEndDragHandler,
 
     void InstantiateTimeStar()
     {
-        int row = Random.Range(0, 7);
-        int collumn = Random.Range(0, 8);
+        int row = Random.Range(0, countCollumn);
+        int collumn = Random.Range(0, countRow);
         do
         {
             if (arrGem[row][collumn] == null || arrGem[row][collumn].GetComponent<Gem>().timeAdd == true)
             {
-                row = Random.Range(0, 7);
-                collumn = Random.Range(0, 8);
+                row = Random.Range(0, countCollumn);
+                collumn = Random.Range(0, countRow);
             }
         } while (arrGem[row][collumn] == null || arrGem[row][collumn].GetComponent<Gem>().timeAdd == true);
         GameObject a = Instantiate(timeStar, tranfsIn.position, Quaternion.identity) as GameObject;
@@ -362,7 +377,7 @@ public class GameController : MonoBehaviour, IBeginDragHandler, IEndDragHandler,
         Vector2 pos = GetPositionTouch(eventData);
         int i = GetIndexGemX(pos);
         int j = GetIndexGemY(pos);
-        if (i < 0 || j < 0 || i > 6 || j > 7)
+        if (i < 0 || j < 0 || i > countCollumn - 1 || j > countRow - 1)
         {
             return;
         }
@@ -416,7 +431,7 @@ public class GameController : MonoBehaviour, IBeginDragHandler, IEndDragHandler,
         Vector2 pos = GetPositionTouch(eventData);
         int x = GetIndexGemX(pos);
         int y = GetIndexGemY(pos);
-        if (x < 0 || y < 0 || x > 6 || y > 7)
+        if (x < 0 || y < 0 || x > countCollumn - 1 || y > countRow - 1)
         {
             return;
         }
@@ -606,13 +621,13 @@ public class GameController : MonoBehaviour, IBeginDragHandler, IEndDragHandler,
     }
     void CacCucRoiXuong()
     {
-        for (int i = 0; i < 7; i++)
+        for (int i = 0; i < countCollumn; i++)
         {
-            if (arrGem[i][7] == null)
+            if (arrGem[i][countCollumn] == null)
             {
-                InstantiateGem(i, 7, iTwenPos);
+                InstantiateGem(i, countCollumn, iTwenPos);
             }
-            for (int j = 0; j < 7; j++)
+            for (int j = 0; j < countCollumn; j++)
             {                
                 DiChuyenCacCuc(i, j);
             }
@@ -628,7 +643,7 @@ public class GameController : MonoBehaviour, IBeginDragHandler, IEndDragHandler,
         {
             for (int a = i - 1; a <= i + 1; a++)
             {
-                if (a >= 0 && b >= 0 && a <= 6 && b <= 7)
+                if (a >= 0 && b >= 0 && a <= countCollumn - 1 && b <= countRow - 1)
                 {
                     if (arrGem[i][j].GetComponent<Gem>().inDex != null && arrGem[a][b] != null)
                     {
@@ -659,9 +674,9 @@ public class GameController : MonoBehaviour, IBeginDragHandler, IEndDragHandler,
     void CheckListInvalid()
     {
         listLoangDau.Clear();
-        for (int j = 0; j < 8; j++)
+        for (int j = 0; j < countRow; j++)
         {
-            for (int i = 0; i < 7; i++)
+            for (int i = 0; i < countCollumn; i++)
             {
                 if (arrGem[i][j] != null)
                 {
@@ -678,9 +693,9 @@ public class GameController : MonoBehaviour, IBeginDragHandler, IEndDragHandler,
     }
     void ResetCheckGem()
     {
-        for (int i = 0; i < 7; i++)
+        for (int i = 0; i < countCollumn; i++)
         {
-            for (int j = 0; j < 8; j++)
+            for (int j = 0; j < countRow; j++)
             {
                 if (arrGem[i][j] != null)
                 {
@@ -761,7 +776,7 @@ public class GameController : MonoBehaviour, IBeginDragHandler, IEndDragHandler,
     //no cac cuc theo chieu doc
     void NoTheoChieuNgang(int vitri)
     {
-        for (int i = 0; i < 8; i++)
+        for (int i = 0; i < countRow; i++)
         {
             if (!ListDelete.Contains(arrGem[vitri][i]))
                 ListDelete.Add(arrGem[vitri][i]);
@@ -770,7 +785,7 @@ public class GameController : MonoBehaviour, IBeginDragHandler, IEndDragHandler,
     //no cac cuc theo chieu ngang
     void NoTheoChieuDoc(int vitri)
     {
-        for (int i = 0; i < 7; i++)
+        for (int i = 0; i < countCollumn; i++)
         {
             if (!ListDelete.Contains(arrGem[i][vitri]))
                 ListDelete.Add(arrGem[i][vitri]);
@@ -782,7 +797,7 @@ public class GameController : MonoBehaviour, IBeginDragHandler, IEndDragHandler,
         {
             for (int n = j - 1; n <= j + 1; n++)
             {
-                if (m >= 0 && n >= 0 && m<7 && n<8)
+                if (m >= 0 && n >= 0 && m<countCollumn && n<countRow)
                 {
                     //arrGem[m][n].GetComponent<Gem>().ResetSpriteDacBiet(arrGem[m][n]);
                     if (!ListDelete.Contains(arrGem[m][n]))
@@ -805,7 +820,7 @@ public class GameController : MonoBehaviour, IBeginDragHandler, IEndDragHandler,
         {
             for (int n = j - 1; n <= j + 1; n++ )
             {
-                if (m >= 0 && n >= 0 && m<7 && n<8 && arrGem[m][n] != arrGem[i][j])
+                if (m >= 0 && n >= 0 && m<countCollumn && n<countRow && arrGem[m][n] != arrGem[i][j])
                 {
                     //arrGem[m][n].GetComponent<Gem>().ChangSpriteDacBiet(arrGem[i][j]);  
                     if (!ListDelete.Contains(arrGem[m][n]))
@@ -824,9 +839,9 @@ public class GameController : MonoBehaviour, IBeginDragHandler, IEndDragHandler,
     
     void InstantiateItemDacBiet()
     {
-    
-        int vitriX = Random.Range(0, 7);
-        int vitriY = Random.Range(0, 8);
+        //int indexRandom;
+        int vitriX = Random.Range(0, countCollumn);
+        int vitriY = Random.Range(0, countRow);
         if (arrGem[vitriX][vitriY] != null && arrGem[vitriX][vitriY].GetComponent<Gem>().cucDacBiet != true)
         {
             if (indexRandom == 0)
@@ -857,23 +872,23 @@ public class GameController : MonoBehaviour, IBeginDragHandler, IEndDragHandler,
     }
     void DestroyButtonMouse()
     {
-        if (Input.GetMouseButtonDown(1))
-        {
-            rayHit = Physics2D.Raycast(Camera.main.ScreenToWorldPoint(Input.mousePosition), Vector2.zero);
+        //if (Input.GetMouseButtonDown(1))
+        //{
+        //    rayHit = Physics2D.Raycast(Camera.main.ScreenToWorldPoint(Input.mousePosition), Vector2.zero);
 
-            if (rayHit.collider == null)
-            {
-                return;
-            }
-            else
-            {
-                ListDelete.Add(rayHit.collider.gameObject);
-                Destroy(ListDelete[0]);
-                Debug.Log(arrGem[0][0]);
-                ListDelete.Clear();
-            }
+        //    if (rayHit.collider == null)
+        //    {
+        //        return;
+        //    }
+        //    else
+        //    {
+        //        ListDelete.Add(rayHit.collider.gameObject);
+        //        Destroy(ListDelete[0]);
+        //        Debug.Log(arrGem[0][0]);
+        //        ListDelete.Clear();
+        //    }
 
-        }
+        //}
     }
 
     int[] totalGemColor = new int[5];
