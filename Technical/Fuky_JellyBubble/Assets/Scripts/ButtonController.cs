@@ -65,4 +65,9 @@ public class ButtonController : MonoBehaviour {
     {
         AudioController.Instance.PlaySound(AudioType.BUTTON_CLICK);
     }
+    public void CheckGameOver()
+    {
+        GameOver.SetActive(true);
+        GamePlay.SetActive(false);
+    }
 }

@@ -87,6 +87,7 @@ public class GameController : MonoBehaviour, IBeginDragHandler, IEndDragHandler,
         level = 0;
         LoadLevel();
         SetTextGUI();
+        SetFillAmuontGarbage();
         noname = GameObject.Find("Canvas").GetComponentInChildren<NoName>();
         if (noname == null)
         {
@@ -348,12 +349,12 @@ public class GameController : MonoBehaviour, IBeginDragHandler, IEndDragHandler,
             }
         }
 
-        
+        SetFillAmuontGarbage();
         UpdateLevel();
         ListDelete.Clear();
         listConect.Clear();
         listMouse.Clear();
-        
+        GameOver();
     }
     float KiemTraKhoangCach(GameObject a, GameObject b)
     {
@@ -1186,4 +1187,11 @@ public class GameController : MonoBehaviour, IBeginDragHandler, IEndDragHandler,
        textSum.text = _countSum.ToString();       
        textWorm.text = _countWorm.ToString();
    }
+    void GameOver()
+    {
+        if (move <= 0 || garbage.GetComponent<Image>().fillAmount == 0)
+        {
+            GameObject.Find("Canvas").GetComponent<ButtonController>().CheckGameOver();
+        }
+    }
 }
