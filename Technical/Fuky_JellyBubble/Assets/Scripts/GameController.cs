@@ -250,7 +250,7 @@ public class GameController : MonoBehaviour, IBeginDragHandler, IEndDragHandler,
 
         a.transform.SetParent(conectContainer);
         Vector3 pos = new Vector3(x, y, 0);
-        a.transform.localScale = new Vector3(0.7f, 0.7f, 0);
+        a.transform.localScale = new Vector3(0.4f, 0.4f, 0);
 
         EffectController effect = a.GetComponent<EffectController>();
         
