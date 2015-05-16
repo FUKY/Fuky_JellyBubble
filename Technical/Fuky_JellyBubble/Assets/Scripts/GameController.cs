@@ -101,12 +101,12 @@ public class GameController : MonoBehaviour, IBeginDragHandler, IEndDragHandler,
 	}
 	
 	// Update is called once per frame
-	void Update () {
+    //void Update () {
         
-	}
-    void FixedUpdate()
+    //}
+    void Update()
     {
-        UpdateLevel();
+        
         if (uplevel == true)
         {
             LoadLevel();
@@ -291,6 +291,7 @@ public class GameController : MonoBehaviour, IBeginDragHandler, IEndDragHandler,
         //xoa cac cuc        
         if (ListDelete.Count >= 3)
         {
+            
             Gem _gem = ListDelete[0].GetComponent<Gem>();
             if (_gem == null)
             {
@@ -317,6 +318,8 @@ public class GameController : MonoBehaviour, IBeginDragHandler, IEndDragHandler,
                 countGarbage += ListDelete.Count;
             }
             SubTotalGem(ListDelete.Count, _gem.inDex);
+
+            UpdateLevel();
 
             for (int i = 0; i < 5; i++)
             {
