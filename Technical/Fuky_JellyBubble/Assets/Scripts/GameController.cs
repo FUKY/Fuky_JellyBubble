@@ -75,7 +75,10 @@ public class GameController : MonoBehaviour, IBeginDragHandler, IEndDragHandler,
 	// Use this for initialization
 	void Start () {
         noname = GameObject.Find("Canvas").GetComponentInChildren<NoName>();
-        
+        if (noname == null)
+        {
+            Debug.Log("Khong the tim thay NoName");
+        }
         ListDelete = new List<GameObject>();
         listMouse = new List<GameObject>();
         listLoangDau = new List<List<GameObject>>();
@@ -166,14 +169,14 @@ public class GameController : MonoBehaviour, IBeginDragHandler, IEndDragHandler,
     public int[] maxGem;
     void InstantiateGem(int row, int collumn, int ItPos)
     {
-        int index = Random.Range(0, 5);
-        //int index;
-        //do
-        //{
-        //    index = Random.Range(0, 5);
 
-        //} while (totalGemColor[index] >= maxGem[index]);
-        //totalGem(index);
+        int index;
+        do
+        {
+            index = Random.Range(0, 5);
+
+        } while (totalGemColor[index] >= maxGem[index]);
+        totalGem(index);
         //GameObject a = Instantiate(listGem[index], Vector3.zero, Quaternion.identity) as GameObject; //new Vector3(row * 0.75f - x, collumn * 0.75f - y + posItween, 0)
         //add vao Canvas        
         GameObject gemObj = SpawnGem(gemPrefabs, "gem");
@@ -250,7 +253,7 @@ public class GameController : MonoBehaviour, IBeginDragHandler, IEndDragHandler,
 
         a.transform.SetParent(conectContainer);
         Vector3 pos = new Vector3(x, y, 0);
-        a.transform.localScale = new Vector3(0.4f, 0.4f, 0);
+        a.transform.localScale = new Vector3(0.45f, 0.45f, 0);
 
         EffectController effect = a.GetComponent<EffectController>();
         
@@ -296,23 +299,22 @@ public class GameController : MonoBehaviour, IBeginDragHandler, IEndDragHandler,
             {
                 if (ListDelete[0].GetComponent<Gem>().inDex == i)
                 {
-                    if (noname != null)
+                    
+                    noname.totalDelete[i] += ListDelete.Count;
+
+                    if (ListDelete.Count >= 5 && ListDelete.Count < 10)
                     {
-                        noname.totalDelete[i] += ListDelete.Count;
-
-                        if (ListDelete.Count >= 5 && ListDelete.Count < 10)
-                        {
-                            float total = noname.totalDelete[i] * 1.3f;
-                            noname.totalDelete[i] = (int)total;
-                        }
-                        if (ListDelete.Count >= 10)
-                        {
-                            float total = noname.totalDelete[i] * 1.5f;
-                            noname.totalDelete[i] = (int)total;
-                        }
-
-                        noname.Test(noname.totalDelete[i], i);
+                        float total = noname.totalDelete[i] * 1.3f;
+                        noname.totalDelete[i] = (int)total;
                     }
+                    if (ListDelete.Count >= 10)
+                    {
+                        float total = noname.totalDelete[i] * 1.5f;
+                        noname.totalDelete[i] = (int)total;
+                    }
+
+                    //noname.Test(noname.totalDelete[i], i);
+                    
                 }
             }
             //kiem tra xem cac cuc dac biet co o trong listDelete khong
@@ -504,7 +506,7 @@ public class GameController : MonoBehaviour, IBeginDragHandler, IEndDragHandler,
             }
         }
         
-        Move(ListDelete, arrGem[x][y]);
+        //Move(ListDelete, arrGem[x][y]);
     }
     //public void OnDrag(PointerEventData eventData)
     //{      
