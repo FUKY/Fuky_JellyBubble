@@ -36,6 +36,11 @@ public class TreeController : MonoBehaviour {
 	void Update () {
 	
 	}
+    [ContextMenu("Test")]
+    void Test()
+    {
+        SetLevel(5);
+    }
 
     public void SetLevel(int _level) 
     {

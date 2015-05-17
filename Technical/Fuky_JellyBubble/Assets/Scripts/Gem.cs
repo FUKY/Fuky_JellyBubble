@@ -24,6 +24,10 @@ public class Gem : MonoBehaviour {
     public int disX;
     public int disY;
     private GameObject a;
+
+    public float GemHeight;
+    public float GemWitdh;
+
     Sprite start;
     Sprite changle;
     int indexStart;
@@ -136,12 +140,12 @@ public class Gem : MonoBehaviour {
     
     public int PosX()
     {
-        int posX = (int)((gameObject.transform.localPosition.x ) / (80 + disX) + 3.0f);
+        int posX = (int)((gameObject.transform.localPosition.x ) / (GemWitdh + disX) + 3.0f);
         return posX;
     }
     public int PosY()
     {
-        int posY = (int)((gameObject.transform.localPosition.y + 36f + 10)/ (72 + disY) + 3.5f);
+        int posY = (int)((gameObject.transform.localPosition.y + GemHeight / 2f + disY)/ (GemHeight + disY) + 3.5f);
         return posY; 
     }
     public void MovePositionStar(Vector3 pos, float movetime)

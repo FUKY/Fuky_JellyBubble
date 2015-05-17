@@ -209,7 +209,7 @@ public class GameController : MonoBehaviour, IBeginDragHandler, IEndDragHandler,
         gemObj.GetComponent<Gem>().spriteStart = gemImageStart[index];
         gemObj.GetComponent<Gem>().spriteChange = gemImageChange[index];        
 
-        Vector3 pos = new Vector3((row - 3.0f) * (80 + disX), (collumn - 3.5f) * (72 + disY) + ItPos, 1);
+        Vector3 pos = new Vector3((row - 3.0f) * (GemWitdh + disX), (collumn - 3.5f) * (GemHeight + disY) + ItPos, 1);
         
         gemObj.transform.SetParent(gemContainer);
         gemObj.transform.localScale = Vector3.one;
@@ -224,7 +224,7 @@ public class GameController : MonoBehaviour, IBeginDragHandler, IEndDragHandler,
         gemObj.GetComponent<Gem>().ResetActive();
         
 
-        Vector3 posIT = new Vector3((row - 3.0f) * (80 + disX), (collumn - 3.5f) * (72 + disY), 1);
+        Vector3 posIT = new Vector3((row - 3.0f) * (GemWitdh + disX), (collumn - 3.5f) * (GemHeight + disY), 1);
         arrGem[row][collumn].GetComponent<Gem>().MovePosition(posIT, 0.5f);
          
     }
@@ -743,19 +743,19 @@ public class GameController : MonoBehaviour, IBeginDragHandler, IEndDragHandler,
     {
 
         int i, j;
-        i = (int)((pos.x + 40)/ 80 + 3.0f);
-        j = (int)((pos.y + 36) / 72 + 3.5f);
+        i = (int)((pos.x + GemWitdh / 2)/ GemWitdh + 3.0f);
+        j = (int)((pos.y + GemHeight / 2) / GemHeight + 3.5f);
         Debug.Log(System.String.Format("X = {0}, Y = {1}", i, j));
     }
     int GetIndexGemX(Vector2 pos)
     {
        
-        int  indexX = (int)((pos.x + 40) / 80 + 3.0f);
+        int  indexX = (int)((pos.x + GemWitdh / 2) / GemWitdh + 3.0f);
         return indexX;
     }
     int GetIndexGemY(Vector2 pos)
     {
-        int indexY = (int)((pos.y + 36) / 72 + 3.5f);
+        int indexY = (int)((pos.y + GemHeight / 2) / GemHeight + 3.5f);
 
         return indexY;
     }
@@ -772,7 +772,7 @@ public class GameController : MonoBehaviour, IBeginDragHandler, IEndDragHandler,
         {
             if (arrGem[m][n + 1] != null)
             {
-                Vector3 pos = new Vector3((m - 3.0f) * (80 + disX), (n  - 3.5f) * (72 + disY), 0);
+                Vector3 pos = new Vector3((m - 3.0f) * (GemWitdh + disX), (n  - 3.5f) * (GemHeight + disY), 0);
                 Gem _gem = arrGem[m][n + 1].GetComponent<Gem>();
                 _gem.GetComponent<Gem>().collumn -= 1;
                 _gem.MovePosition(pos, 0.5f);
