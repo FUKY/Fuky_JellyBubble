@@ -23,7 +23,7 @@ public class ButtonController : MonoBehaviour {
 
     public void StartButton()
     {
-        gameObject.SetActive(false);
+        GameStart.SetActive(false);
         GamePlay.SetActive(true);
         PlayButtonClick();
     }
@@ -39,7 +39,7 @@ public class ButtonController : MonoBehaviour {
         PlayButtonClick();
         GamePlay.SetActive(true);
         GameOver.SetActive(false);
-        GamePlay.GetComponentInChildren<GameController>().ReStart();
+        GamePlay.GetComponentInChildren<GameController>().RandomMap();
     }
 
     public void ToStartMenu()
@@ -47,14 +47,14 @@ public class ButtonController : MonoBehaviour {
 
         PlayButtonClick();
         
-        gameObject.SetActive(false);
+        HighScore.SetActive(false);
         GameStart.SetActive(true);
     }
 
     public void ToHighScore()
     {
         PlayButtonClick();
-        gameObject.SetActive(false);
+        GameStart.SetActive(false);
         HighScore.SetActive(true);
     }
 

@@ -81,9 +81,17 @@ public class LevelConfig : MonoSingleton<LevelConfig> {
         return levelConfig;
     }
 
-    public DataLevel GetDataLevelByLevel(int level) 
+    public DataLevel GetDataLevelByLevel(int level)
     {
-        return levelConfigs[level];
+        if (level < levelConfigs.Count)
+        {
+            return levelConfigs[level];
+        }
+        else 
+        {
+            return levelConfigs[levelConfigs.Count - 1];
+        }
+        
     }
     
 }

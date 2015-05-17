@@ -10,6 +10,7 @@ public class HightScore : MonoBehaviour {
     int highScore = 0;
 	// Use this for initialization
 	void Start () {
+
         SaveScore1();
         
 	}
@@ -21,6 +22,12 @@ public class HightScore : MonoBehaviour {
 	}
     void SaveScore()
     {
+        if (gameController == null)
+        {
+            return;
+        }
+        else
+
         if (gameController.score > highScore)
         {
             //highScore = int.Parse(score.text);
@@ -31,16 +38,28 @@ public class HightScore : MonoBehaviour {
     }
     public void SaveScore1()
     {
-        if (gameController.score > PlayerPrefs.GetInt("Score"))
+        if (gameController == null)
         {
-            PlayerPrefs.SetInt("Score", gameController.score);
-            PlayerPrefs.Save();
+            return;
         }
-        highScoreText.text = "Hight Score: " + PlayerPrefs.GetInt("Score");
+        else
+        {
+            if (gameController.score > PlayerPrefs.GetInt("Score"))
+            {
+                PlayerPrefs.SetInt("Score", gameController.score);
+                PlayerPrefs.Save();
+            }
+            highScoreText.text = "Hight Score: " + PlayerPrefs.GetInt("Score");
+        }
 
     }
     void LoadScore()
     {
-        score.text = gameController.score.ToString();
+        if (gameController == null)
+        {
+            return;
+        }
+        else
+            score.text = gameController.score.ToString();
     }
 }

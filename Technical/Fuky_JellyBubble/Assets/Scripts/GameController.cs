@@ -27,6 +27,9 @@ public class GameController : MonoBehaviour, IBeginDragHandler, IEndDragHandler,
     public int iTwenPos;//vi tri in ra luc dau
     private float localScale = 1;//kich thuc gem
 
+    public int GemHeight;
+    public int GemWitdh;
+
     [HideInInspector]
     public bool activeTimeHelp = false;
 
@@ -918,8 +921,22 @@ public class GameController : MonoBehaviour, IBeginDragHandler, IEndDragHandler,
         activeDestroyGem = false;
         boolScale = false;
         score = 0;
+        move = 31;
+        SetTextGUI();
+
+        _countGarbage = 20;
+        _countSum = 0;
+        _countGround = 0;
+        _countWorm = 0;
+        _countWarter = 0;
+
+        level = 0;
+        UpdateLevel();
+
         help = 0;
-        move = 2;
+        
+        
+
         activeInstanDacBiet2 = false;
         activeInstanDacBiet1 = false;
         activeAddtime = false;
